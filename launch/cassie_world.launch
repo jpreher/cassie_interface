@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<launch>
+
+<arg name="world_name" value="$(find cassie_description)/cassie/cassie_empty.world"/>
+<arg name="paused" value="true"/>
+<arg name="use_sim_time" value="true"/>
+<arg name="recording" value="false"/>
+<arg name="gui" value="true"/>
+<arg name="headless" value="false"/>
+<arg name="extra_gazebo_args" value=""/>
+<arg name="verbose" value="true"/>
+<arg name="physics" value="ode"/>
+
+<!-- set command arguments -->
+<arg unless="$(arg paused)" name="command_arg1" value=""/>
+<arg     if="$(arg paused)" name="command_arg1" value="-u"/>
+<arg unless="$(arg recording)" name="command_arg2" value=""/>
+<arg     if="$(arg recording)" name="command_arg2" value="-r"/>
+<arg unless="$(arg verbose)" name="command_arg3" value=""/>
+<arg     if="$(arg verbose)" name="command_arg3" value="--verbose"/>
+
+<!-- Launch Gazebo -->
+<node name="gazebo" pkg="gazebo_ros" type="gazebo" respawn="false" output="screen"
+        args="$(arg command_arg1) $(arg command_arg2) $(arg command_arg3) $(arg world_name) $(arg use_sim_time)" />
+
+<!-- Spawn Cassie into Gazebo -->
+<node name="spawn_sdf" pkg="gazebo_ros" type="spawn_model" args="-file $(find cassie_description)/cassie/cassie.sdf -sdf -model cassie -x 0.0 -y 0.0 -z 0.2"/>
+
+<!-- Enable robot_description for RViz -->
+<param name="robot_description" command="cat $(find cassie_description)/urdf/cassie_v4.urdf" />
+
+</launch>

@@ -1,0 +1,84 @@
+<?xml version="1.0" ?>
+<launch>
+
+<include file="$(find cassie_interface)/launch/cassie_world.launch"/>
+
+<rosparam>
+    use_sim_time: true
+    cassie:
+        is_simulation: true
+        dt: 0.0005
+        log_estimation: true
+        log_controller: true
+        interface:
+            safe_torque_limit: '[90, 60, 90, 200, 40, 90, 60, 90, 200, 40]'
+            heelspring_solver:
+                zero_springs_on_startup: false
+                num_zeroing_samples: 2000
+            contact_classifier:
+                use_sigmoid: true
+                sigmoid_A: 0.30
+                sigmoid_B: 30
+                sigmoid_power: 1
+                linear_lb: 50
+                linear_ub: 100
+                lowpass_dt_cutoff: 0.005
+            kinematics_velocity:
+                lowpass_vx_dt_cutoff: 0.06
+                lowpass_vy_dt_cutoff: 0.06
+                lowpass_vz_dt_cutoff: 0.06
+        locomotion_control:
+            dt: 0.001
+            standing:
+                use_qp: true
+                use_lateral_comp: true
+                Kp_lateral_compensator: 3.0
+                Kd_lateral_compensator: 0.04
+                kp: '[200., 100., 300., 400., 50.]'
+                kd: '[5., 2., 6., 8., 2.]'
+                pose_command:
+                    x_com_offset: -0.01
+                    x_lowpass_dt_cutoff: 0.75
+                    height_lowpass_dt_cutoff: 1.5
+                    pitch_lowpass_dt_cutoff: 2.0
+                    lateral_lowpass_dt_cutoff: 2.0
+                    height_lb: -0.90
+                    height_ub: -0.40
+                    lateral_lb: -0.75
+                    lateral_ub: 0.75
+                    pitch_lb: 0
+                    pitch_ub: 0
+                inverse_kinematics:
+                    ik_xtol: 0.00000001
+                    ik_iter_limit: 10
+                qp:
+                    clf_override_task_pd: false
+                    clf_gam: 0.1006
+                    res_clf_ep: 1
+                    kp: '[300, 500, 200, 200, 200, 100]'
+                    kd: '[12, 15, 8, 4, 4, 4]'
+                    nQPIter: 30
+                    reg_ddq: 0.01
+                    reg_u: 0.1
+                    reg_achilles: 0.00001
+                    reg_rigid: 0.00001
+                    reg_fx: 0.02
+                    reg_fy: 0.005
+                    reg_fz: 0.000001
+                    reg_muy: 0.0001
+                    reg_muz: 0.001
+                    reg_clf_delta: 5
+                    w_u_chatter: 1.2
+                    w_outputs: 1
+                    w_hol_achilles: 8
+                    w_hol_fixed: 8
+                    w_hol_fx: 15
+                    w_hol_fy: 15
+                    w_hol_fz: 15
+                    w_hol_my: 6
+                    w_hol_mz: 6
+</rosparam>
+
+<node name="cassie_interface_node" pkg="cassie_interface" type="cassie_interface_node" args="" respawn="false" />
+
+</launch>
