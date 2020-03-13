@@ -21,9 +21,9 @@
                 linear_ub: 100
                 lowpass_dt_cutoff: 0.005
             kinematics_velocity:
-                lowpass_vx_dt_cutoff: 0.06
-                lowpass_vy_dt_cutoff: 0.06
-                lowpass_vz_dt_cutoff: 0.06
+                lowpass_vx_dt_cutoff: 0.09
+                lowpass_vy_dt_cutoff: 0.09
+                lowpass_vz_dt_cutoff: 0.09
         locomotion_control:
             dt: 0.001
             standing:
@@ -49,22 +49,26 @@
                     ik_xtol: 0.00000001
                     ik_iter_limit: 10
                 qp:
-                    clf_override_task_pd: false
-                    clf_gam: 0.1006
-                    res_clf_ep: 1
-                    kp: '[300, 500, 200, 200, 200, 100]'
-                    kd: '[12, 15, 8, 4, 4, 4]'
+                    clf_use_Vdot_cost: true
+                    clf_use_inequality: false
+                    clf_use_task_pd: false
+                    clf_gam: 0.14
+                    res_clf_ep: 0.3
+                    Pdiag: '[3570.7142, 3570.7142, 2786.6895, 1538.2423, 1538.2423, 862.40613, 71.414284, 71.414284, 63.931041, 39.717246, 39.717246, 23.918842]'
+                    Poffdiag: '[50, 50, 43.589, 38.7298, 38.7298, 36.0555]'
+                    kp: '[300, 500, 200, 400, 200, 100]'
+                    kd: '[12, 15, 8, 10, 4, 4]'
                     nQPIter: 30
                     reg_ddq: 0.01
                     reg_u: 0.1
-                    reg_achilles: 0.00001
+                    reg_achilles: 0.000001
                     reg_rigid: 0.00001
                     reg_fx: 0.02
                     reg_fy: 0.005
                     reg_fz: 0.000001
                     reg_muy: 0.0001
-                    reg_muz: 0.001
-                    reg_clf_delta: 5
+                    reg_muz: 0.1
+                    reg_clf_delta: 10
                     w_u_chatter: 1.2
                     w_outputs: 1
                     w_hol_achilles: 8
@@ -74,6 +78,7 @@
                     w_hol_fz: 15
                     w_hol_my: 6
                     w_hol_mz: 6
+                    w_Vdot: 1
 </rosparam>
 
 <node name="cassie_interface_node" 

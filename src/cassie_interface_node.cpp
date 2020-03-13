@@ -301,8 +301,9 @@ int main(int argc, char *argv[])
                 double crouch_wait_sec = 5.0;
                 double updown_duration = 2 * crouch_wait_sec;
                 if (ros::Time::now().toSec() > 15.0) {
-                    if ( fmod(ts,updown_duration) > crouch_wait_sec )
-                        cassie_out.pelvis.radio.channel[LS] = 0.0;
+                    cassie_out.pelvis.radio.channel[SH] = -1.0;
+                    //if ( fmod(ts,updown_duration) > crouch_wait_sec )
+                    //    cassie_out.pelvis.radio.channel[LS] = 0.0;
                 }
 
             }
