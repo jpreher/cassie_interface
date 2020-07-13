@@ -82,6 +82,52 @@
                     w_hol_my: 6
                     w_hol_mz: 6
                     w_Vdot: 1
+            stepping:
+                nDomain: 2
+                time_scale: 1.0
+                x_offset: 0.035
+                ff_scaling: 1.4
+                stoppable_velocity_threshold: 0.2
+                use_feedforward: true
+                ff_use_rotation: false
+                ff_zero_springs: true
+                use_contact_switching: true
+                kpt: '[400, 400, 300, 500, 400, 400, 300, 300, 50]'
+                kdt: '[12, 12, 8, 12, 10, 10, 6, 6, 2]'
+                kp: '[250, 150, 200, 300, 200, 200, 200, 200, 50]'
+                kd: '[3, 2, 6, 8, 8, 8, 6, 6, 2]'
+                grf_KpX: -15
+                grf_KpY: 0
+                gaitlib: 'package://cassie_controllers/gaits/gaitlib_20200229.yaml'
+                raibert:
+                    phaseThreshold: 0.50
+                    KpX: 0.00
+                    KdX: 0.00
+                    KpY: 0.10
+                    KdY: 0.02
+                qp:
+                    kp: '[400, 400, 400, 600, 600, 600, 400, 400, 25]'
+                    kd: '[8, 8, 6, 10, 10, 10, 6, 6, 8]'
+                    nQPIter: 30
+                    reg_ddq: 0.1
+                    reg_u: 0.2
+                    reg_achilles: 0.00001
+                    reg_rigid: 0.00001
+                    reg_fx: 0.0001
+                    reg_fy: 0.0001
+                    reg_fz: 0.000001
+                    reg_muy: 0.000001
+                    reg_muz: 0.001
+                    reg_clf_delta: 0.0001
+                    w_u_chatter: 1
+                    w_outputs: 1
+                    w_hol_achilles: 8
+                    w_hol_fixed: 8
+                    w_hol_fx: 15
+                    w_hol_fy: 15
+                    w_hol_fz: 15
+                    w_hol_my: 6
+                    w_hol_mz: 6
 </rosparam>
 
 <node name="cassie_interface_node" pkg="cassie_interface" type="cassie_interface_node" args="" respawn="false" />
