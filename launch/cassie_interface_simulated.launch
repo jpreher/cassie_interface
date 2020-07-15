@@ -20,12 +20,12 @@
                 sigmoid_A: 0.30
                 sigmoid_B: 30
                 sigmoid_power: 1
-                linear_lb: 50
-                linear_ub: 100
+                linear_lb: 40
+                linear_ub: 90
                 lowpass_dt_cutoff: 0.005
             kinematics_velocity:
-                lowpass_vx_dt_cutoff: 0.06
-                lowpass_vy_dt_cutoff: 0.06
+                lowpass_vx_dt_cutoff: 0.07
+                lowpass_vy_dt_cutoff: 0.07
                 lowpass_vz_dt_cutoff: 0.06
         locomotion_control:
             dt: 0.001
@@ -42,7 +42,7 @@
                     height_lowpass_dt_cutoff: 1.5
                     pitch_lowpass_dt_cutoff: 2.0
                     lateral_lowpass_dt_cutoff: 2.0
-                    height_lb: -0.90
+                    height_lb: -0.85
                     height_ub: -0.40
                     lateral_lb: -0.75
                     lateral_ub: 0.75
@@ -83,6 +83,7 @@
                     w_hol_mz: 6
                     w_Vdot: 1
             stepping:
+                use_qp: false
                 nDomain: 2
                 time_scale: 1.0
                 x_offset: 0.035
@@ -98,7 +99,7 @@
                 kd: '[3, 2, 6, 8, 8, 8, 6, 6, 2]'
                 grf_KpX: -15
                 grf_KpY: 0
-                gaitlib: 'package://cassie_controllers/gaits/gaitlib_20200229.yaml'
+                gaitlib: 'package://cassie_controllers/gaits/gaitlib_20200714.yaml'
                 raibert:
                     phaseThreshold: 0.50
                     KpX: 0.00

@@ -39,7 +39,7 @@
                     height_lowpass_dt_cutoff: 2.25
                     pitch_lowpass_dt_cutoff: 2.25
                     lateral_lowpass_dt_cutoff: 2.25
-                    height_lb: -0.90
+                    height_lb: -0.80
                     height_ub: -0.40
                     lateral_lb: -0.90
                     lateral_ub: 0.90
@@ -80,6 +80,7 @@
                     w_hol_mz: 6
                     w_Vdot: 2.7
             stepping:
+                use_qp: false
                 nDomain: 2
                 time_scale: 1.0
                 x_offset: 0.035
@@ -94,7 +95,7 @@
                 grf_KpY: 0
                 kp: '[200, 200, 200, 300, 200, 200, 200, 200, 50]'
                 kd: '[8, 8, 6, 10, 8, 8, 6, 6, 2]'
-                gaitlib: 'package://cassie_controllers/gaits/gaitlib_20200226_04.yaml'
+                gaitlib: 'package://cassie_controllers/gaits/gaitlib_20200714.yaml'
                 raibert:
                     phaseThreshold: 0.50
                     KpX: 0.10
