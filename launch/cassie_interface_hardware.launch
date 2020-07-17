@@ -90,12 +90,11 @@
                 ff_use_rotation: false
                 ff_zero_springs: true
                 use_contact_switching: true
-                use_contact_switching: true
                 grf_KpX: 0
                 grf_KpY: 0
-                kp: '[200, 200, 200, 300, 200, 200, 200, 200, 50]'
-                kd: '[8, 8, 6, 10, 8, 8, 6, 6, 2]'
-                gaitlib: 'package://cassie_controllers/gaits/gaitlib_20200714.yaml'
+                kp: '[300, 300, 200, 300, 200, 200, 200, 200, 50]'
+                kd: '[5, 5, 6, 8, 8, 8, 6, 6, 2]'
+                gaitlib: 'package://cassie_controllers/gaits/gaitlib_20200715.yaml'
                 raibert:
                     phaseThreshold: 0.50
                     KpX: 0.10
