@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
     KinematicsHipVelocityEstimator velocityEstimator(nh, robot, true);
 
     // Whether to log data
-    VectorXd log = VectorXd::Zero(43);
+    VectorXd log = VectorXd::Zero(46);
     std::fstream logfile;
     bool log_estimation = false;
     ros::param::get("/cassie/log_estimation", log_estimation);
@@ -296,14 +296,13 @@ int main(int argc, char *argv[])
                     proprioception_msg.contact[1] = 0.;
                 }
 
-                // Cycle dynamic crouches
-                double ts = ros::Time::now().toSec();
-                double crouch_wait_sec = 5.0;
-                double updown_duration = 2 * crouch_wait_sec;
-                if (ros::Time::now().toSec() > 15.0) {
+                // Do simulation
+                if (ros::Time::now().toSec() > 12.0) {
+                    // Crouch simulation
                     cassie_out.pelvis.radio.channel[SH] = -1.0;
-                    //if ( fmod(ts,updown_duration) > crouch_wait_sec )
-                    //    cassie_out.pelvis.radio.channel[LS] = 0.0;
+
+                    // Walk simulation
+                    // cassie_out.pelvis.radio.channel[SB] = 1.0;
                 }
 
             }
@@ -325,6 +324,7 @@ int main(int argc, char *argv[])
                 log << ros::Time::now().toSec(),                                                                                                                // 1
                         proprioception_msg.orientation.w, proprioception_msg.orientation.x, proprioception_msg.orientation.y, proprioception_msg.orientation.z, // 4
                         proprioception_msg.angular_velocity.x, proprioception_msg.angular_velocity.y, proprioception_msg.angular_velocity.z,                    // 3
+                        proprioception_msg.linear_acceleration.x, proprioception_msg.linear_acceleration.y, proprioception_msg.linear_acceleration.z,           // 3
                         proprioception_msg.linear_velocity.x, proprioception_msg.linear_velocity.y, proprioception_msg.linear_velocity.z,                       // 3
                         Map<VectorXd>(proprioception_msg.encoder_position.data(), proprioception_msg.encoder_position.size()),                                  // 14
                         Map<VectorXd>(proprioception_msg.encoder_velocity.data(), proprioception_msg.encoder_position.size()),                                  // 14

@@ -355,10 +355,10 @@ void CassiePlugin::onUpdate()
     const double DETACH_TIME = 10.0;
     if (static_joint_attached) {
         if (((currentTime - firstPacketTime_).Double() > LOWER_TIME) && ((currentTime - firstPacketTime_).Double() < DETACH_TIME)) {
-            // Lower pelvis 1 seconds after receiving data
+            // Lower pelvis x seconds after receiving data
             lowerPelvis();
         } else if ((currentTime - firstPacketTime_).Double() > DETACH_TIME) {
-            // Detatch pelvis 5 seconds after receiving data
+            // Detatch pelvis x seconds after receiving data
             detachPelvis();
         }
     }
@@ -456,22 +456,30 @@ void CassiePlugin::applyTorques(const cassie_in_t *cassieIn)
 void CassiePlugin::detachPelvis()
 {
     // Set large limits to effectively detach
-    auto model = this->worldPtr_->ModelByName("cassie");
-    gazebo::physics::JointPtr x_joint = model->GetJoint("BasePosX");
-    gazebo::physics::JointPtr y_joint = model->GetJoint("BasePosY");
-    gazebo::physics::JointPtr z_joint = model->GetJoint("BasePosZ");
-    gazebo::physics::JointPtr roll_joint = model->GetJoint("BaseRotX");
-    gazebo::physics::JointPtr pitch_joint = model->GetJoint("BaseRotY");
+    gazebo::physics::JointPtr x_joint = this->worldPtr_->ModelByName("cassie")->GetJoint("BasePosX");
     x_joint->SetLowerLimit(0,-1000);
     x_joint->SetUpperLimit(0,1000);
+
+    gazebo::physics::JointPtr y_joint = this->worldPtr_->ModelByName("cassie")->GetJoint("BasePosY");
     y_joint->SetLowerLimit(0,-1000);
     y_joint->SetUpperLimit(0,1000);
+
+    gazebo::physics::JointPtr z_joint = this->worldPtr_->ModelByName("cassie")->GetJoint("BasePosZ");
     z_joint->SetLowerLimit(0,-1000);
     z_joint->SetUpperLimit(0,1000);
+
+    gazebo::physics::JointPtr roll_joint = this->worldPtr_->ModelByName("cassie")->GetJoint("BaseRotX");
     roll_joint->SetLowerLimit(0,-1000);
     roll_joint->SetUpperLimit(0,1000);
+
+    gazebo::physics::JointPtr pitch_joint = this->worldPtr_->ModelByName("cassie")->GetJoint("BaseRotY");
     pitch_joint->SetLowerLimit(0,-1000);
     pitch_joint->SetUpperLimit(0,1000);
+
+    gazebo::physics::JointPtr yaw_joint = this->worldPtr_->ModelByName("cassie")->GetJoint("BaseRotZ");
+    yaw_joint->SetLowerLimit(0,-1000);
+    yaw_joint->SetUpperLimit(0,1000);
+
     static_joint_attached = false;
 }
 
