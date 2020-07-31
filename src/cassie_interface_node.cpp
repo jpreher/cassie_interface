@@ -43,6 +43,7 @@
 #include <cassie_description/cassie_model.hpp>
 #include <cassie_estimation/heelspring_solver.hpp>
 #include <cassie_estimation/contact_classifier.hpp>
+#include <cassie_estimation/contact_ekf.hpp>
 #include <yaml_eigen_utilities/yaml_eigen_utilities.hpp>
 #include <cassie_estimation/kinematics_hip_velocity_estimator.hpp>
 #include <cassie_common_toolbox/RadioButtonMap.hpp>
@@ -79,6 +80,9 @@ int main(int argc, char *argv[])
     bool isSim = false;
     ros::param::get("/cassie/is_simulation", isSim);
     timeout_timer.start();
+
+    bool useContactEKF = false;
+    ros::param::get("/cassie/interface/use_ekf", useContactEKF);
 
     // Get the safe torque limit from the parameter server
     std::string stl;
@@ -148,6 +152,7 @@ int main(int argc, char *argv[])
     ContactClassifier contact(nh, robot, 0.0005);
     HeelspringSolver achillesSolver(nh, robot);
     KinematicsHipVelocityEstimator velocityEstimator(nh, robot, true);
+    contact_ekf ekf(nh, robot, true);
 
     // Whether to log data
     VectorXd log = VectorXd::Zero(46);
@@ -272,11 +277,39 @@ int main(int argc, char *argv[])
             contact.update();
 
             // Run the velocity estimation
-            velocityEstimator.update();
-            proprioception_msg.linear_velocity.x = robot.dq(BasePosX);
-            proprioception_msg.linear_velocity.y = robot.dq(BasePosY);
-            proprioception_msg.linear_velocity.z = robot.dq(BasePosZ);
+            if (useContactEKF) {
+                // Reset the EKF if the SA/SB radio gets pulled down
+                if (proprioception_msg.radio[SA] < 1 || proprioception_msg.radio[SB] < 0)
+                    ekf.reset();
 
+                VectorXd w(3), a(3);
+                w << proprioception_msg.angular_velocity.x, proprioception_msg.angular_velocity.y, proprioception_msg.angular_velocity.z;
+                a << proprioception_msg.linear_acceleration.x, proprioception_msg.linear_acceleration.y, proprioception_msg.linear_acceleration.z;
+                VectorXd encoder(14), dencoder(14), con(2);
+                for (int i = 0; i<14; i++) {
+                    encoder(i) = proprioception_msg.encoder_position[i];
+                    dencoder(i) = proprioception_msg.encoder_velocity[i];
+                }
+                con << robot.leftContact, robot.rightContact;
+
+                ekf.update(0.0005, w, a, encoder, dencoder, con);
+
+                // Extract result
+                Matrix3d R;
+                Vector3d pos, vel, ba, bg, plf, prf;
+                ekf.getValues(R,pos,vel,ba,bg,plf,prf);
+
+                proprioception_msg.linear_velocity.x = vel(0);
+                proprioception_msg.linear_velocity.y = vel(1);
+                proprioception_msg.linear_velocity.z = vel(2);
+            } else {
+                velocityEstimator.update();
+                proprioception_msg.linear_velocity.x = robot.dq(BasePosX);
+                proprioception_msg.linear_velocity.y = robot.dq(BasePosY);
+                proprioception_msg.linear_velocity.z = robot.dq(BasePosZ);
+            }
+
+            // Populate all other terms
             proprioception_msg.q_achilles[0] = robot.q(LeftHeelSpring);
             proprioception_msg.q_achilles[1] = robot.q(RightHeelSpring);
             proprioception_msg.dq_achilles[0] = 0.; // The velocities are quite violent, set to zero.
@@ -297,7 +330,7 @@ int main(int argc, char *argv[])
                 }
 
                 // Do simulation
-                if (ros::Time::now().toSec() > 12.0) {
+                if (ros::Time::now().toSec() > 15.0) {
                     // Crouch simulation
                     cassie_out.pelvis.radio.channel[SH] = -1.0;
 

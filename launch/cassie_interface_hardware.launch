@@ -8,6 +8,7 @@
         log_estimation: true
         log_controller: true
         interface:
+            use_ekf: true
             safe_torque_limit: '[90, 60, 90, 200, 40, 90, 60, 90, 200, 40]'
             heelspring_solver:
                 zero_springs_on_startup: true
@@ -24,6 +25,25 @@
                 lowpass_vx_dt_cutoff: 0.90
                 lowpass_vy_dt_cutoff: 0.90
                 lowpass_vz_dt_cutoff: 0.75
+            contact_ekf:
+                apply_post_filter: true
+                post_filter_dt_cutoff_x: 0.09
+                post_filter_dt_cutoff_y: 0.03
+                post_filter_dt_cutoff_z: 0.06
+                gyro_noise_std: 0.00007
+                gyro_bias_noise_std: 0.001
+                accel_noise_std: 0.04
+                accel_bias_noise_std: 0.001
+                contact_noise_std: 0.01
+                encoder_noise_std: 0.0175
+                contact_std: 0.001
+                prior_base_rotation_std: 0.01
+                prior_base_position_std: 0.01
+                prior_base_velocity_std: 0.1
+                prior_contact_position_std: 0.025
+                prior_gyro_bias_std: 0.01
+                prior_accel_bias_std: 0.1
+                prior_forward_kinematics_std: 0.03
         locomotion_control:
             dt: 0.001
             standing:

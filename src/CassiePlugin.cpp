@@ -352,7 +352,7 @@ void CassiePlugin::onUpdate()
     // Detatch pelvis 5 seconds after receiving data
     // Slowly lower and detach robot for easy initialization
     const double LOWER_TIME = 5.0;
-    const double DETACH_TIME = 10.0;
+    const double DETACH_TIME = 7.5;
     if (static_joint_attached) {
         if (((currentTime - firstPacketTime_).Double() > LOWER_TIME) && ((currentTime - firstPacketTime_).Double() < DETACH_TIME)) {
             // Lower pelvis x seconds after receiving data
@@ -420,6 +420,11 @@ void CassiePlugin::updateCassieOut()
 
     // Set accelerometer/gyro/magnetometer measurement
     for (size_t i = 0; i < 3; ++i) {
+        if (accel[i] > 30)
+            accel[i] = 30;
+        if (accel[i] < -30)
+            accel[i] = -30;
+
         cassieOut_.pelvis.vectorNav.linearAcceleration[i] = accel[i];
         cassieOut_.pelvis.vectorNav.angularVelocity[i] = gyro[i];
         cassieOut_.pelvis.vectorNav.magneticField[i] = mag[i];
