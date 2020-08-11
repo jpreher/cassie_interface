@@ -59,6 +59,7 @@ using namespace cassie_model;
 // Variable for control
 static VectorXd u(10);
 static ros_utilities::Timer timeout_timer(true);
+static ros_utilities::Timer estimation_realtime_timer(true);
 
 // Callback for controller subscriber
 void controller_callback(const cassie_common_toolbox::cassie_control_msg::ConstPtr& controlmsg) {
@@ -80,6 +81,8 @@ int main(int argc, char *argv[])
     bool isSim = false;
     ros::param::get("/cassie/is_simulation", isSim);
     timeout_timer.start();
+    estimation_realtime_timer.start();
+
 
     bool useContactEKF = false;
     ros::param::get("/cassie/interface/use_ekf", useContactEKF);
@@ -292,12 +295,25 @@ int main(int argc, char *argv[])
                 }
                 con << robot.leftContact, robot.rightContact;
 
+
                 ekf.update(0.0005, w, a, encoder, dencoder, con);
+                //ekf.update(estimation_realtime_timer.elapsed(), w, a, encoder, dencoder, con);
+                estimation_realtime_timer.restart();
 
                 // Extract result
                 Matrix3d R;
                 Vector3d pos, vel, ba, bg, plf, prf;
                 ekf.getValues(R,pos,vel,ba,bg,plf,prf);
+
+                // Rotate yaw
+                Eigen::Quaterniond quat(R);
+                Eigen::EulerAnglesXYZd euler;
+                eulerXYZ(quat, euler);
+                Eigen::Matrix3d Rz;
+                Rz << cos(euler.gamma()), -sin(euler.gamma()), 0,
+                      sin(euler.gamma()), cos(euler.gamma()),  0,
+                      0,                  0,                   1;
+                vel = Rz.transpose() * vel;
 
                 proprioception_msg.linear_velocity.x = vel(0);
                 proprioception_msg.linear_velocity.y = vel(1);
