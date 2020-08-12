@@ -295,9 +295,8 @@ int main(int argc, char *argv[])
                 }
                 con << robot.leftContact, robot.rightContact;
 
-
-                ekf.update(0.0005, w, a, encoder, dencoder, con);
-                //ekf.update(estimation_realtime_timer.elapsed(), w, a, encoder, dencoder, con);
+                //ekf.update(0.0005, w, a, encoder, dencoder, con);
+                ekf.update(estimation_realtime_timer.elapsed(), w, a, encoder, dencoder, con);
                 estimation_realtime_timer.restart();
 
                 // Extract result
