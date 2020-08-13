@@ -305,9 +305,8 @@ int main(int argc, char *argv[])
                 ekf.getValues(R,pos,vel,ba,bg,plf,prf);
 
                 // Rotate yaw
-                Eigen::Quaterniond quat(R);
                 Eigen::EulerAnglesXYZd euler;
-                eulerXYZ(quat, euler);
+                eulerXYZ(R, euler);
                 Eigen::Matrix3d Rz;
                 Rz << cos(euler.gamma()), -sin(euler.gamma()), 0,
                       sin(euler.gamma()), cos(euler.gamma()),  0,
