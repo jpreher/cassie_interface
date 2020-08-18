@@ -301,8 +301,9 @@ int main(int argc, char *argv[])
 
                 // Extract result
                 Matrix3d R;
+                Vector2d footYaws;
                 Vector3d pos, vel, ba, bg, plf, prf;
-                ekf.getValues(R,pos,vel,ba,bg,plf,prf);
+                ekf.getValues(R,pos,vel,ba,bg,plf,prf,footYaws);
 
                 // Rotate yaw
                 Eigen::EulerAnglesXYZd euler;
