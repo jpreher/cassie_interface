@@ -106,7 +106,7 @@
                 nDomain: 2
                 time_scale: 1.0
                 x_offset: 0.035
-                vx_offset: 0.06
+                vx_offset: 0.02
                 vy_offset: 0.045
                 u_stancetoe_offset: 2.5
                 ff_scaling: 1.4
@@ -117,17 +117,18 @@
                 use_contact_switching: true
                 grf_KpX: 0
                 grf_KpY: 0
-                ddq_KdX: 1.8
-                ddq_KdY: 2.5
-                kp: '[500, 500, 300, 300, 200, 200, 200, 200, 50]'
-                kd: '[8, 8, 6, 6, 6, 6, 6, 6, 2]'
+                ddq_KdX: 0.50
+                ddq_KpY: 0.75
+                ddq_KdY: 0.0
+                kp: '[500, 500, 200, 300, 200, 300, 200, 200, 50]'
+                kd: '[6, 8, 4, 6, 6, 6, 4, 4, 2]'
                 gaitlib: 'package://cassie_controllers/gaits/20200827.yaml'
                 raibert:
                     phaseThreshold: 0.50
-                    KpX: 0.85
-                    KdX: 0.08
-                    KpY: 0.65
-                    KdY: 0.08
+                    KpX: 0.20
+                    KdX: 0.03
+                    KpY: 0.45
+                    KdY: 0.04
                 qp:
                     kp: '[400, 400, 400, 600, 600, 600, 400, 400, 50]'
                     kd: '[8, 8, 6, 10, 10, 10, 6, 6, 2]'
