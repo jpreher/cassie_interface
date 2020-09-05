@@ -283,7 +283,9 @@ int main(int argc, char *argv[])
             if (useContactEKF) {
                 // Reset the EKF if the SA/SB radio gets pulled down
                 if (proprioception_msg.radio[SA] < 1 || proprioception_msg.radio[SB] < 0)
+                {
                     ekf.reset();
+                }
 
                 VectorXd w(3), a(3);
                 w << proprioception_msg.angular_velocity.x, proprioception_msg.angular_velocity.y, proprioception_msg.angular_velocity.z;

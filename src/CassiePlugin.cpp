@@ -308,6 +308,12 @@ void CassiePlugin::Load(gazebo::physics::ModelPtr model, sdf::ElementPtr sdf)
     // Listen to the update event which is broadcast every simulation iteration
     this->updateConnectionPtr_ = gazebo::event::Events::ConnectWorldUpdateBegin(
         std::bind(&CassiePlugin::onUpdate, this));
+
+    // Set the imu subscriber
+    gazebo::transport::NodePtr node(new gazebo::transport::Node());
+    node->Init("default");
+    std::string topicName = "/gazebo/default/cassie/pelvis/imu/imu";
+    this->imuSubscriber = node->Subscribe(topicName, &CassiePlugin::onSensorUpdate, this);
 }
 
 
@@ -349,15 +355,20 @@ void CassiePlugin::onUpdate()
         lastPacketTime_ = currentTime;
     }
 
-    // Detatch pelvis 5 seconds after receiving data
+    // Detatch pelvis after receiving data
     // Slowly lower and detach robot for easy initialization
     const double LOWER_TIME = 5.0;
-    const double DETACH_TIME = 7.5;
+    const double HOLD_TIME  = 7.4;
+    const double DETACH_TIME = 9.0;
     if (static_joint_attached) {
-        if (((currentTime - firstPacketTime_).Double() > LOWER_TIME) && ((currentTime - firstPacketTime_).Double() < DETACH_TIME)) {
+        if (((currentTime - firstPacketTime_).Double() > LOWER_TIME) && ((currentTime - firstPacketTime_).Double() < HOLD_TIME)) {
             // Lower pelvis x seconds after receiving data
             lowerPelvis();
-        } else if ((currentTime - firstPacketTime_).Double() > DETACH_TIME) {
+        }
+        else if ((currentTime - firstPacketTime_).Double() > HOLD_TIME && ((currentTime - firstPacketTime_).Double() < DETACH_TIME)) {
+            // DO NOTHING
+        }
+        else if ((currentTime - firstPacketTime_).Double() > DETACH_TIME) {
             // Detatch pelvis x seconds after receiving data
             detachPelvis();
         }
@@ -378,6 +389,12 @@ void CassiePlugin::onUpdate()
         send_packet(sock_, sendBuf_, SENDLEN,
                     (struct sockaddr *) &srcAddr_, addrLen_);
     }
+}
+
+void CassiePlugin::onSensorUpdate(ConstIMUPtr &_msg) {
+    this->gyroscope     = _msg->angular_velocity();
+    this->accelerometer = _msg->linear_acceleration();
+    this->orientation   = _msg->orientation();
 }
 
 void CassiePlugin::updateCassieOut()
@@ -401,6 +418,7 @@ void CassiePlugin::updateCassieOut()
     }
 
     // IMU
+    /*
     auto pose = pelvisPtr_->WorldPose();
 
     auto worldAccel = pelvisPtr_->WorldLinearAccel() - worldPtr_->Gravity();
@@ -429,6 +447,29 @@ void CassiePlugin::updateCassieOut()
         cassieOut_.pelvis.vectorNav.angularVelocity[i] = gyro[i];
         cassieOut_.pelvis.vectorNav.magneticField[i] = mag[i];
     }
+    */
+
+    auto pose = pelvisPtr_->WorldPose();
+    auto rot = pose.Rot().Inverse();
+    auto worldMag = ignition::math::Vector3d(0, 1, 0);
+    auto mag = rot.RotateVector(worldMag);
+
+    cassieOut_.pelvis.vectorNav.orientation[0] = this->orientation.w();
+    cassieOut_.pelvis.vectorNav.orientation[1] = this->orientation.x();
+    cassieOut_.pelvis.vectorNav.orientation[2] = this->orientation.y();
+    cassieOut_.pelvis.vectorNav.orientation[3] = this->orientation.z();
+
+    cassieOut_.pelvis.vectorNav.angularVelocity[0] = this->gyroscope.x();
+    cassieOut_.pelvis.vectorNav.angularVelocity[1] = this->gyroscope.y();
+    cassieOut_.pelvis.vectorNav.angularVelocity[2] = this->gyroscope.z();
+
+    cassieOut_.pelvis.vectorNav.linearAcceleration[0] = this->accelerometer.x();
+    cassieOut_.pelvis.vectorNav.linearAcceleration[1] = this->accelerometer.y();
+    cassieOut_.pelvis.vectorNav.linearAcceleration[2] = this->accelerometer.z();
+
+    cassieOut_.pelvis.vectorNav.magneticField[0] = mag[0];
+    cassieOut_.pelvis.vectorNav.magneticField[1] = mag[1];
+    cassieOut_.pelvis.vectorNav.magneticField[2] = mag[2];
 }
 
 void CassiePlugin::applyTorques(const cassie_in_t *cassieIn)

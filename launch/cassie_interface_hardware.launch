@@ -27,9 +27,9 @@
                 lowpass_vz_dt_cutoff: 0.09
             contact_ekf:
                 apply_post_filter: true
-                post_filter_dt_cutoff_x: 0.04
-                post_filter_dt_cutoff_y: 0.04
-                post_filter_dt_cutoff_z: 0.05
+                post_filter_dt_cutoff_x: 0.025
+                post_filter_dt_cutoff_y: 0.025
+                post_filter_dt_cutoff_z: 0.03
                 gyro_noise_std: 0.000065
                 gyro_bias_noise_std: 0.0001
                 accel_noise_std: 0.0075
@@ -82,7 +82,7 @@
                     kd: '[18, 15, 8, 10, 4, 4]'
                     nQPIter: 30
                     reg_ddq: 0.001
-                    reg_u: 1.8
+                    reg_u: 1.2
                     reg_achilles: 0.000001
                     reg_rigid: 0.00001
                     reg_fx: 0.018
@@ -122,7 +122,7 @@
                 ddq_KdY: 0.0
                 kp: '[500, 500, 200, 300, 200, 300, 200, 200, 50]'
                 kd: '[6, 8, 4, 6, 6, 6, 4, 4, 2]'
-                gaitlib: 'package://cassie_controllers/gaits/20200827.yaml'
+                gaitlib: 'package://cassie_controllers/gaits/20200904.yaml'
                 raibert:
                     phaseThreshold: 0.50
                     KpX: 0.20

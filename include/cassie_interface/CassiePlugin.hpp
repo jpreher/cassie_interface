@@ -19,6 +19,8 @@
 
 #include <array>
 #include <functional>
+#include <iostream>
+#include <boost/bind.hpp>
 #include <gazebo/gazebo.hh>
 #include <gazebo/physics/physics.hh>
 #include <gazebo/common/Plugin.hh>
@@ -51,6 +53,12 @@ class CassiePlugin : public gazebo::ModelPlugin {
 
     // Cassie core
     cassie_core_sim_t *corePtr_;
+
+    // IMU sensor subscriber and data
+    gazebo::transport::SubscriberPtr imuSubscriber;
+    gazebo::msgs::Vector3d accelerometer;
+    gazebo::msgs::Vector3d gyroscope;
+    gazebo::msgs::Quaternion orientation;
 
     // Motor Filter
     int motorFilterB_[MOTOR_FILTER_NB];
@@ -85,6 +93,7 @@ class CassiePlugin : public gazebo::ModelPlugin {
 
     // Pelvis pointer
     gazebo::physics::LinkPtr pelvisPtr_;
+
 
     // Flag that specifies if the static joint is attached
     bool static_joint_attached;
@@ -191,6 +200,8 @@ class CassiePlugin : public gazebo::ModelPlugin {
      * @brief onUpdate is called after every simulation update
      */
     void onUpdate();
+
+    void onSensorUpdate(ConstIMUPtr &_msg);
 
     /**
      * @brief applyTorques is used to apply Torques to all the drives
