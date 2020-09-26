@@ -360,6 +360,7 @@ void CassiePlugin::onUpdate()
     const double LOWER_TIME = 5.0;
     const double HOLD_TIME  = 7.4;
     const double DETACH_TIME = 9.0;
+    const double DAMPER_TIME = 12.0;
     if (static_joint_attached) {
         if (((currentTime - firstPacketTime_).Double() > LOWER_TIME) && ((currentTime - firstPacketTime_).Double() < HOLD_TIME)) {
             // Lower pelvis x seconds after receiving data
@@ -372,6 +373,38 @@ void CassiePlugin::onUpdate()
             // Detatch pelvis x seconds after receiving data
             detachPelvis();
         }
+    }
+    if ((currentTime - firstPacketTime_).Double() > DETACH_TIME && ((currentTime - firstPacketTime_).Double() < DAMPER_TIME)) {
+        gazebo::physics::LinkPtr pelvis = this->worldPtr_->ModelByName("cassie")->GetLink("pelvis");
+        ignition::math::Vector3d vpelvis = pelvis->WorldLinearVel();
+        ignition::math::Vector3d wpelvis = pelvis->WorldAngularVel();
+        ignition::math::Vector3d fpelvis = vpelvis;
+        ignition::math::Vector3d mpelvis = wpelvis;
+        fpelvis.X() *= -300;
+        fpelvis.Y() *= -25;
+        fpelvis.Z() *= -400;
+        mpelvis.X() *= -100;
+        mpelvis.Y() *= -100;
+        mpelvis.Z() *= -40;
+
+        pelvis->AddForce(fpelvis);
+        pelvis->AddTorque(mpelvis);
+    } else {
+        gazebo::physics::LinkPtr pelvis = this->worldPtr_->ModelByName("cassie")->GetLink("pelvis");
+        ignition::math::Vector3d vpelvis = pelvis->WorldLinearVel();
+        ignition::math::Vector3d wpelvis = pelvis->WorldAngularVel();
+        ignition::math::Vector3d fpelvis = vpelvis;
+        ignition::math::Vector3d mpelvis = wpelvis;
+        fpelvis.X() *= -0;
+        fpelvis.Y() *= -0;
+        fpelvis.Z() *= -0;
+        mpelvis.X() *= -0;
+        mpelvis.Y() *= -0;
+        mpelvis.Z() *= -0;
+
+
+        pelvis->AddForce(fpelvis);
+        pelvis->AddTorque(mpelvis);
     }
 
     if (runSim_) {
@@ -454,10 +487,15 @@ void CassiePlugin::updateCassieOut()
     auto worldMag = ignition::math::Vector3d(0, 1, 0);
     auto mag = rot.RotateVector(worldMag);
 
-    cassieOut_.pelvis.vectorNav.orientation[0] = this->orientation.w();
-    cassieOut_.pelvis.vectorNav.orientation[1] = this->orientation.x();
-    cassieOut_.pelvis.vectorNav.orientation[2] = this->orientation.y();
-    cassieOut_.pelvis.vectorNav.orientation[3] = this->orientation.z();
+    // Set computed orientation
+    cassieOut_.pelvis.vectorNav.orientation[0] = pose.Rot().W();
+    cassieOut_.pelvis.vectorNav.orientation[1] = pose.Rot().X();
+    cassieOut_.pelvis.vectorNav.orientation[2] = pose.Rot().Y();
+    cassieOut_.pelvis.vectorNav.orientation[3] = pose.Rot().Z();
+    //    cassieOut_.pelvis.vectorNav.orientation[0] = this->orientation.w();
+    //    cassieOut_.pelvis.vectorNav.orientation[1] = this->orientation.x();
+    //    cassieOut_.pelvis.vectorNav.orientation[2] = this->orientation.y();
+    //    cassieOut_.pelvis.vectorNav.orientation[3] = this->orientation.z();
 
     cassieOut_.pelvis.vectorNav.angularVelocity[0] = this->gyroscope.x();
     cassieOut_.pelvis.vectorNav.angularVelocity[1] = this->gyroscope.y();
@@ -467,9 +505,15 @@ void CassiePlugin::updateCassieOut()
     cassieOut_.pelvis.vectorNav.linearAcceleration[1] = this->accelerometer.y();
     cassieOut_.pelvis.vectorNav.linearAcceleration[2] = this->accelerometer.z();
 
-    cassieOut_.pelvis.vectorNav.magneticField[0] = mag[0];
-    cassieOut_.pelvis.vectorNav.magneticField[1] = mag[1];
-    cassieOut_.pelvis.vectorNav.magneticField[2] = mag[2];
+    //cassieOut_.pelvis.vectorNav.magneticField[0] = mag[0];
+    //cassieOut_.pelvis.vectorNav.magneticField[1] = mag[1];
+    //cassieOut_.pelvis.vectorNav.magneticField[2] = mag[2];
+
+    gazebo::physics::LinkPtr pelvis = this->worldPtr_->ModelByName("cassie")->GetLink("pelvis");
+    ignition::math::Vector3d vpelvis = pelvis->WorldLinearVel();
+    cassieOut_.pelvis.vectorNav.magneticField[0] = vpelvis.X();
+    cassieOut_.pelvis.vectorNav.magneticField[1] = vpelvis.Y();
+    cassieOut_.pelvis.vectorNav.magneticField[2] = vpelvis.Z();
 }
 
 void CassiePlugin::applyTorques(const cassie_in_t *cassieIn)
