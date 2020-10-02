@@ -340,6 +340,27 @@ int main(int argc, char *argv[])
                 cassie_out.pelvis.radio.channel[SB] = 0.0;
                 cassie_out.pelvis.radio.channel[LS] = 1.0;
 
+                // Use real velocity from gazebo
+                Eigen::Quaterniond quat;
+                quat.w() = proprioception_msg.orientation.w;
+                quat.x() = proprioception_msg.orientation.x;
+                quat.y() = proprioception_msg.orientation.y;
+                quat.z() = proprioception_msg.orientation.z;
+                Eigen::EulerAnglesXYZd euler;
+                eulerXYZ(quat, euler);
+                Eigen::Matrix3d Rz;
+                Rz << cos(euler.gamma()), -sin(euler.gamma()), 0,
+                        sin(euler.gamma()),  cos(euler.gamma()), 0,
+                        0, 0, 1;
+                Vector3d vel;
+                vel << cassie_out.pelvis.vectorNav.magneticField[0],
+                        cassie_out.pelvis.vectorNav.magneticField[1],
+                        cassie_out.pelvis.vectorNav.magneticField[2];
+                vel = Rz.transpose() * vel;
+                proprioception_msg.linear_velocity.x = vel[0];
+                proprioception_msg.linear_velocity.y = vel[1];
+                proprioception_msg.linear_velocity.z = vel[2];
+
                 // Don't use springs right away
                 if (ros::Time::now().toSec() < 1.0) {
                     proprioception_msg.contact[0] = 0.;
@@ -347,12 +368,12 @@ int main(int argc, char *argv[])
                 }
 
                 // Do simulation
-                if (ros::Time::now().toSec() > 15.0) {
+                if (ros::Time::now().toSec() > 10.0) {
                     // Crouch simulation
-                    cassie_out.pelvis.radio.channel[SH] = -1.0;
+                    // cassie_out.pelvis.radio.channel[SH] = -1.0;
 
                     // Walk simulation
-                    // cassie_out.pelvis.radio.channel[SB] = 1.0;
+                    cassie_out.pelvis.radio.channel[SB] = 1.0;
                 }
 
             }
