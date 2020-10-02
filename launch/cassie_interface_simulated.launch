@@ -34,9 +34,9 @@
                 post_filter_dt_cutoff_y: 0.03
                 post_filter_dt_cutoff_z: 0.03
                 gyro_noise_std: 0.000065
-                gyro_bias_noise_std: 0.0001
-                accel_noise_std: 0.0045
-                accel_bias_noise_std: 0.0001
+                gyro_bias_noise_std: 0.001
+                accel_noise_std: 0.0075
+                accel_bias_noise_std: 0.005
                 contact_noise_std: 0.0001
                 encoder_noise_std: 0.000175
                 contact_std: 0.001
@@ -109,44 +109,48 @@
                 nDomain: 2
                 time_scale: 1.0
                 x_offset: 0.035
-                vx_offset: 0.02
-                vy_offset: 0.045
-                u_stancetoe_offset: 2.5
+                vx_offset: 0.0
+                vy_offset: 0.0
+                u_stancetoe_offset: 0
                 ff_scaling: 1.4
                 stoppable_velocity_threshold: 0.2
                 use_feedforward: true
                 ff_use_rotation: false
                 ff_zero_springs: true
-                use_contact_switching: true
+                use_contact_switching: false
                 grf_KpX: 0
                 grf_KpY: 0
+                ddq_KpX: 0.0
                 ddq_KdX: 0.50
-                ddq_KpY: 8.00
-                ddq_KdY: 1.75
-                kp: '[500, 500, 200, 300, 200, 300, 200, 200, 50]'
-                kd: '[6, 8, 4, 6, 6, 6, 4, 4, 2]'
-                gaitlib: 'package://cassie_controllers/gaits/20200904.yaml'
+                ddq_KpY: 0.0
+                ddq_KdY: 0.0
+                kp: '[1600, 800, 400, 600, 500, 400, 400, 400, 25]'
+                kd: '[25, 16, 5, 14, 12, 6, 6, 6, 2]'
+                gaitlib: 'package://cassie_controllers/gaits/20200927.yaml'
                 raibert:
                     phaseThreshold: 0.50
-                    KpX: 0.08
-                    KdX: 0.15
-                    KpY: 0.25
-                    KdY: 0.55
+                    KpX: 0.05
+                    KdX: 0.12
+                    KpY: 0.15
+                    KdY: 0.23
                 qp:
-                    kp: '[400, 400, 400, 600, 600, 600, 400, 400, 50]'
-                    kd: '[8, 8, 6, 10, 10, 10, 6, 6, 2]'
-                    nQPIter: 30
-                    reg_ddq: 0.1
-                    reg_u: 0.2
+                    clf_use_Vdot_cost: true
+                    clf_use_inequality: false
+                    clf_use_task_pd: false
+                    kp: '[500, 500, 400, 900, 700, 500, 400, 400, 100]'
+                    kd: '[40, 40, 10, 20, 15, 12, 14, 10, 8]'
+                    nQPIter: 100
+                    reg_ddq: 0.00001
+                    reg_u: 5
                     reg_achilles: 0.00001
-                    reg_rigid: 0.00001
-                    reg_fx: 0.0001
-                    reg_fy: 0.0001
-                    reg_fz: 0.000001
-                    reg_muy: 0.000001
-                    reg_muz: 0.001
+                    reg_rigid: 0.0000001
+                    reg_fx: 0.00001
+                    reg_fy: 0.00001
+                    reg_fz: 0.00001
+                    reg_muy: 0.00001
+                    reg_muz: 0.00001
                     reg_clf_delta: 0.0001
-                    w_u_chatter: 1
+                    w_u_chatter: 2.25
                     w_outputs: 1
                     w_hol_achilles: 8
                     w_hol_fixed: 8
@@ -155,6 +159,7 @@
                     w_hol_fz: 15
                     w_hol_my: 6
                     w_hol_mz: 6
+                    w_vDot: 5
 </rosparam>
 
 <node name="cassie_interface_node" pkg="cassie_interface" type="cassie_interface_node" args="" respawn="false" />
