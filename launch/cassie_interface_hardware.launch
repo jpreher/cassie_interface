@@ -18,8 +18,8 @@
                 sigmoid_A: 0.30
                 sigmoid_B: 30
                 sigmoid_power: 1
-                linear_lb: 50
-                linear_ub: 100
+                linear_lb: 65
+                linear_ub: 115
                 lowpass_dt_cutoff: 0.005
             kinematics_velocity:
                 lowpass_vx_dt_cutoff: 0.09
@@ -27,15 +27,15 @@
                 lowpass_vz_dt_cutoff: 0.09
             contact_ekf:
                 apply_post_filter: true
-                post_filter_dt_cutoff_x: 0.025
-                post_filter_dt_cutoff_y: 0.025
-                post_filter_dt_cutoff_z: 0.03
-                gyro_noise_std: 0.000065
+                post_filter_dt_cutoff_x: 0.01
+                post_filter_dt_cutoff_y: 0.01
+                post_filter_dt_cutoff_z: 0.01
+                gyro_noise_std: 0.00006
                 gyro_bias_noise_std: 0.0001
-                accel_noise_std: 0.0075
+                accel_noise_std: 0.006
                 accel_bias_noise_std: 0.0001
                 contact_noise_std: 0.001
-                encoder_noise_std: 0.0175
+                encoder_noise_std: 0.018
                 contact_std: 0.001
                 contact_yaw_std: 0.001
                 prior_base_rotation_std: 0.01
@@ -82,7 +82,7 @@
                     kd: '[18, 15, 8, 10, 4, 4]'
                     nQPIter: 30
                     reg_ddq: 0.001
-                    reg_u: 1.2
+                    reg_u: 1.8
                     reg_achilles: 0.000001
                     reg_rigid: 0.00001
                     reg_fx: 0.018
@@ -91,7 +91,7 @@
                     reg_muy: 0.0001
                     reg_muz: 0.1
                     reg_clf_delta: 10
-                    w_u_chatter: 0.0001
+                    w_u_chatter: 0.01
                     w_outputs: 1
                     w_hol_achilles: 8
                     w_hol_fixed: 8
@@ -105,45 +105,49 @@
                 use_qp: false
                 nDomain: 2
                 time_scale: 1.0
-                x_offset: 0.035
+                x_offset: 0.04
                 vx_offset: 0.02
-                vy_offset: 0.045
-                u_stancetoe_offset: 2.5
+                vy_offset: 0.02
+                u_stancetoe_offset: 0.025
                 ff_scaling: 1.4
-                stoppable_velocity_threshold: 0.2
+                stoppable_velocity_threshold: 0.08
                 use_feedforward: true
                 ff_use_rotation: false
                 ff_zero_springs: true
-                use_contact_switching: true
+                use_contact_switching: false
                 grf_KpX: 0
                 grf_KpY: 0
+                ddq_KpX: 0.0
                 ddq_KdX: 0.50
-                ddq_KpY: 0.75
+                ddq_KpY: 0.0
                 ddq_KdY: 0.0
-                kp: '[500, 500, 200, 300, 200, 300, 200, 200, 50]'
-                kd: '[6, 8, 4, 6, 6, 6, 4, 4, 2]'
-                gaitlib: 'package://cassie_controllers/gaits/20200904.yaml'
+                kp: '[900, 500, 300, 300, 250, 200, 200, 200, 25]'
+                kd: '[12, 6, 4, 6, 5, 6, 4, 4, 2]'
+                gaitlib: 'package://cassie_controllers/gaits/20200927.yaml'
                 raibert:
                     phaseThreshold: 0.50
-                    KpX: 0.20
-                    KdX: 0.03
-                    KpY: 0.45
-                    KdY: 0.04
+                    KpX: 0.0
+                    KdX: 0.0
+                    KpY: 0.10
+                    KdY: 0.24
                 qp:
-                    kp: '[400, 400, 400, 600, 600, 600, 400, 400, 50]'
-                    kd: '[8, 8, 6, 10, 10, 10, 6, 6, 2]'
-                    nQPIter: 30
-                    reg_ddq: 0.1
-                    reg_u: 0.2
-                    reg_achilles: 0.00001
+                    clf_use_Vdot_cost: false
+                    clf_use_inequality: false
+                    clf_use_task_pd: true
+                    kp: '[600, 600, 300, 1500, 1200, 1000, 400, 400, 250]'
+                    kd: '[6, 6, 4, 15, 12, 12, 5, 5, 8]'
+                    nQPIter: 100
+                    reg_ddq: 0.0001
+                    reg_u: 4
+                    reg_achilles: 0.000001
                     reg_rigid: 0.00001
-                    reg_fx: 0.0001
-                    reg_fy: 0.0001
-                    reg_fz: 0.000001
-                    reg_muy: 0.000001
-                    reg_muz: 0.001
-                    reg_clf_delta: 0.0001
-                    w_u_chatter: 1
+                    reg_fx: 0.001
+                    reg_fy: 0.001
+                    reg_fz: 0.01
+                    reg_muy: 0.001
+                    reg_muz: 0.01
+                    reg_clf_delta: 0.00001
+                    w_u_chatter: 0.75
                     w_outputs: 1
                     w_hol_achilles: 8
                     w_hol_fixed: 8
@@ -152,6 +156,7 @@
                     w_hol_fz: 15
                     w_hol_my: 6
                     w_hol_mz: 6
+                    w_Vdot: 1
 </rosparam>
 
 <node name="cassie_interface_node" 
