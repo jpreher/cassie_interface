@@ -279,23 +279,22 @@ int main(int argc, char *argv[])
             achillesSolver.update();
             contact.update();
 
+            // Break out measured quantities
+            VectorXd w(3), a(3);
+            w << proprioception_msg.angular_velocity.x, proprioception_msg.angular_velocity.y, proprioception_msg.angular_velocity.z;
+            a << proprioception_msg.linear_acceleration.x, proprioception_msg.linear_acceleration.y, proprioception_msg.linear_acceleration.z;
+            VectorXd encoder(14), dencoder(14), con(2);
+            for (int i = 0; i<14; i++) {
+                encoder(i) = proprioception_msg.encoder_position[i];
+                dencoder(i) = proprioception_msg.encoder_velocity[i];
+            }
+            con << robot.leftContact, robot.rightContact;
+
             // Run the velocity estimation
             if (useContactEKF) {
                 // Reset the EKF if the SA/SB radio gets pulled down
                 if (proprioception_msg.radio[SA] < 1 || proprioception_msg.radio[SB] < 0)
-                {
                     ekf.reset();
-                }
-
-                VectorXd w(3), a(3);
-                w << proprioception_msg.angular_velocity.x, proprioception_msg.angular_velocity.y, proprioception_msg.angular_velocity.z;
-                a << proprioception_msg.linear_acceleration.x, proprioception_msg.linear_acceleration.y, proprioception_msg.linear_acceleration.z;
-                VectorXd encoder(14), dencoder(14), con(2);
-                for (int i = 0; i<14; i++) {
-                    encoder(i) = proprioception_msg.encoder_position[i];
-                    dencoder(i) = proprioception_msg.encoder_velocity[i];
-                }
-                con << robot.leftContact, robot.rightContact;
 
                 //ekf.update(0.0005, w, a, encoder, dencoder, con);
                 ekf.update(estimation_realtime_timer.elapsed(), w, a, encoder, dencoder, con);
@@ -315,6 +314,37 @@ int main(int argc, char *argv[])
                       sin(euler.gamma()), cos(euler.gamma()),  0,
                       0,                  0,                   1;
                 vel = Rz.transpose() * vel;
+
+                // Rotate into foot frames
+                VectorXd q(22); q.setZero();
+                for (int i=0; i<robot.iEncoderMap.size(); i++)
+                    q(robot.iEncoderMap(i)) = encoder(i);
+                Matrix3d Rzl, Rzr;
+                MatrixXd temp(6,1);
+                SymFunction::pose_leftFoot(temp,q);
+                Rzl << cos(temp(5)), -sin(temp(5)), 0,
+                      sin(temp(5)), cos(temp(5)), 0,
+                      0, 0, 1.0;
+
+                SymFunction::pose_rightFoot(temp,q);
+                Rzr << cos(temp(5)), -sin(temp(5)), 0,
+                      sin(temp(5)), cos(temp(5)), 0,
+                      0, 0, 1.0;
+
+                // Rotate into frame relative to stance foot
+                if ( (con(0) >= 0.25) && (con(1) >= 0.25) ) {
+                    // Double support
+                    VectorXd vl(3), vr(3);
+                    vl = Rzl * vel;
+                    vr = Rzr * vel;
+                    vel = (vl + vr) / 2.0;
+                } else if (con(1) >= 0.25) {
+                    // Right support
+                    vel = Rzr * vel;
+                } else if (con(0) >= 0.25) {
+                    // Left support
+                    vel = Rzl * vel;
+                }
 
                 proprioception_msg.linear_velocity.x = vel(0);
                 proprioception_msg.linear_velocity.y = vel(1);
@@ -361,6 +391,37 @@ int main(int argc, char *argv[])
                 proprioception_msg.linear_velocity.y = vel[1];
                 proprioception_msg.linear_velocity.z = vel[2];
 
+                // Rotate into foot frames
+                VectorXd q(22); q.setZero();
+                for (int i=0; i<robot.iEncoderMap.size(); i++)
+                    q(robot.iEncoderMap(i)) = encoder(i);
+                Matrix3d Rzl, Rzr;
+                MatrixXd temp(6,1);
+                SymFunction::pose_leftFoot(temp,q);
+                Rzl << cos(temp(5)), -sin(temp(5)), 0,
+                      sin(temp(5)), cos(temp(5)), 0,
+                      0, 0, 1.0;
+
+                SymFunction::pose_rightFoot(temp,q);
+                Rzr << cos(temp(5)), -sin(temp(5)), 0,
+                      sin(temp(5)), cos(temp(5)), 0,
+                      0, 0, 1.0;
+
+                // Rotate into frame relative to stance foot
+                if ( (con(0) >= 0.25) && (con(1) >= 0.25) ) {
+                    // Double support
+                    VectorXd vl(3), vr(3);
+                    vl = Rzl * vel;
+                    vr = Rzr * vel;
+                    vel = (vl + vr) / 2.0;
+                } else if (con(1) >= 0.25) {
+                    // Right support
+                    vel = Rzr * vel;
+                } else if (con(0) >= 0.25) {
+                    // Left support
+                    vel = Rzl * vel;
+                }
+
                 // Don't use springs right away
                 if (ros::Time::now().toSec() < 1.0) {
                     proprioception_msg.contact[0] = 0.;
@@ -374,8 +435,11 @@ int main(int argc, char *argv[])
 
                     // Walk simulation
                     cassie_out.pelvis.radio.channel[SB] = 1.0;
-                }
 
+                    if (ros::Time::now().toSec() > 20.0) {
+                        cassie_out.pelvis.radio.channel[LV] = 0.7;
+                    }
+                }
             }
 
             // Re-update the message for shins in case achillesSolver added an offset.

@@ -25,7 +25,7 @@ CassiePlugin::CassiePlugin() :
     kMaxTorque_{4.5, 4.5, 12.2, 12.2, 0.9, 4.5, 4.5, 12.2, 12.2, 0.9},
     kMotorOffset_{0, 0, 0, -0.785398, 0, 0, 0, 0, -0.785398, 0},
     kJointBits_{18, 18, 13, 18, 18, 13},
-    kJointOffset_{0, 1.012291, 0, 0, 1.01229, 0},
+    kJointOffset_{0, 1.012291, 0, 0, 1.012291, 0},
     motorFilterB_{2727, 534, -2658, -795, 72, 110, 19, -6, -3},
     jointFilterB_{12.348, 12.348, -12.348, -12.348},
     jointFilterA_{1.0, -1.7658, 0.79045},
@@ -316,7 +316,6 @@ void CassiePlugin::Load(gazebo::physics::ModelPtr model, sdf::ElementPtr sdf)
     this->imuSubscriber = node->Subscribe(topicName, &CassiePlugin::onSensorUpdate, this);
 }
 
-
 void CassiePlugin::onUpdate()
 {
     // Get current time and calculate last update time
@@ -381,10 +380,10 @@ void CassiePlugin::onUpdate()
         ignition::math::Vector3d fpelvis = vpelvis;
         ignition::math::Vector3d mpelvis = wpelvis;
         fpelvis.X() *= -300;
-        fpelvis.Y() *= -25;
-        fpelvis.Z() *= -400;
-        mpelvis.X() *= -100;
-        mpelvis.Y() *= -100;
+        fpelvis.Y() *= -10;
+        fpelvis.Z() *= -100;
+        mpelvis.X() *= -25;
+        mpelvis.Y() *= -25;
         mpelvis.Z() *= -40;
 
         pelvis->AddForce(fpelvis);
