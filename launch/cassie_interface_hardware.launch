@@ -105,31 +105,27 @@
                 use_qp: false
                 nDomain: 2
                 time_scale: 1.0
-                x_offset: 0.04
-                vx_offset: 0.02
-                vy_offset: 0.02
-                u_stancetoe_offset: 0.025
-                ff_scaling: 1.4
+                x_offset: 0.025
+                vx_offset: 0.0
+                vy_offset: 0.03
+                u_stancetoe_offset: 0.0175
                 stoppable_velocity_threshold: 0.08
-                use_feedforward: true
-                ff_use_rotation: false
-                ff_zero_springs: true
-                use_contact_switching: false
+                use_contact_switching: true
                 grf_KpX: 0
                 grf_KpY: 0
-                ddq_KpX: 0.0
+                ddq_KpX: 1.25
                 ddq_KdX: 0.50
-                ddq_KpY: 0.0
-                ddq_KdY: 0.0
+                ddq_KpY: 2.75
+                ddq_KdY: 0.60
                 kp: '[900, 500, 300, 300, 250, 200, 200, 200, 25]'
                 kd: '[12, 6, 4, 6, 5, 6, 4, 4, 2]'
                 gaitlib: 'package://cassie_controllers/gaits/20200927.yaml'
                 raibert:
                     phaseThreshold: 0.50
-                    KpX: 0.0
-                    KdX: 0.0
-                    KpY: 0.10
-                    KdY: 0.24
+                    KpX: 0.02
+                    KdX: 0.0025
+                    KpY: 0.05
+                    KdY: 0.22
                 qp:
                     clf_use_Vdot_cost: false
                     clf_use_inequality: false
