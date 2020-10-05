@@ -436,9 +436,16 @@ int main(int argc, char *argv[])
                     // Walk simulation
                     cassie_out.pelvis.radio.channel[SB] = 1.0;
 
-                    if (ros::Time::now().toSec() > 20.0) {
-                        cassie_out.pelvis.radio.channel[LV] = 0.7;
-                    }
+                    if (ros::Time::now().toSec() > 25.0)
+                        cassie_out.pelvis.radio.channel[LV] = 1.;
+                    if (ros::Time::now().toSec() > 45.0)
+                        cassie_out.pelvis.radio.channel[LV] = 0.;
+                    if (ros::Time::now().toSec() > 55.0)
+                        cassie_out.pelvis.radio.channel[LV] = -1.;
+                    if (ros::Time::now().toSec() > 75.0)
+                        cassie_out.pelvis.radio.channel[LV] = 0.;
+                    if (ros::Time::now().toSec() > 85.0)
+                        cassie_out.pelvis.radio.channel[LH] = 1.;
                 }
             }
 

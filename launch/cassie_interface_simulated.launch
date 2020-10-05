@@ -21,8 +21,8 @@
                 sigmoid_A: 0.30
                 sigmoid_B: 30
                 sigmoid_power: 1
-                linear_lb: 40
-                linear_ub: 90
+                linear_lb: 60
+                linear_ub: 110
                 lowpass_dt_cutoff: 0.005
             kinematics_velocity:
                 lowpass_vx_dt_cutoff: 0.06
@@ -108,31 +108,32 @@
                 use_qp: false
                 nDomain: 2
                 time_scale: 1.0
-                x_offset: 0.035
                 vx_offset: 0.0
-                vy_offset: 0.0
+                vy_offset: 0.00
                 u_stancetoe_offset: 0
-                ff_scaling: 1.4
                 stoppable_velocity_threshold: 0.2
-                use_feedforward: true
-                ff_use_rotation: false
-                ff_zero_springs: true
-                use_contact_switching: false
+                use_contact_switching: true
                 grf_KpX: 0
                 grf_KpY: 0
-                ddq_KpX: 0.0
-                ddq_KdX: 0.50
-                ddq_KpY: 0.0
-                ddq_KdY: 0.0
-                kp: '[1600, 800, 400, 600, 500, 400, 400, 400, 25]'
+                ddq_KpX: 2.5
+                ddq_KdX: 0.8
+                ddq_KiX: 2.25
+                ddq_KpY: 1.00
+                ddq_KdY: 0.75
+                ddq_KiY: 0.00
+                kp: '[1600, 800, 400, 600, 500, 400, 400, 400, 30]'
                 kd: '[25, 16, 5, 14, 12, 6, 6, 6, 2]'
                 gaitlib: 'package://cassie_controllers/gaits/20200927.yaml'
+                vdx_ub: 1.0
+                vdx_lb: -0.6
+                vdy_ub: 0.4
+                vdy_lb: -0.4
                 raibert:
                     phaseThreshold: 0.50
-                    KpX: 0.05
-                    KdX: 0.12
-                    KpY: 0.15
-                    KdY: 0.23
+                    KpX: 0.01
+                    KdX: 0.0015
+                    KpY: 0.11
+                    KdY: 0.22
                 qp:
                     clf_use_Vdot_cost: true
                     clf_use_inequality: false
