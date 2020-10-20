@@ -367,8 +367,9 @@ int main(int argc, char *argv[])
             if (isSim) {
                 // Robot is in simulation
                 cassie_out.pelvis.radio.channel[SA] = 1.0;
-                cassie_out.pelvis.radio.channel[SB] = 0.0;
+                cassie_out.pelvis.radio.channel[SB] = 0.;
                 cassie_out.pelvis.radio.channel[LS] = 1.0;
+                //cassie_out.pelvis.radio.channel[S1] = -0.5;
 
                 // Use real velocity from gazebo
                 Eigen::Quaterniond quat;
@@ -442,10 +443,16 @@ int main(int argc, char *argv[])
                         cassie_out.pelvis.radio.channel[LV] = 0.;
                     if (ros::Time::now().toSec() > 55.0)
                         cassie_out.pelvis.radio.channel[LV] = -1.;
-                    if (ros::Time::now().toSec() > 75.0)
+                    if (ros::Time::now().toSec() > 65.0)
                         cassie_out.pelvis.radio.channel[LV] = 0.;
-                    if (ros::Time::now().toSec() > 85.0)
+                    if (ros::Time::now().toSec() > 75.0)
                         cassie_out.pelvis.radio.channel[LH] = 1.;
+                    if (ros::Time::now().toSec() > 85.0)
+                        cassie_out.pelvis.radio.channel[LH] = 0.;
+                    if (ros::Time::now().toSec() > 95.0) {
+                        cassie_out.pelvis.radio.channel[LH] = -0.50;
+                        cassie_out.pelvis.radio.channel[LV] =  0.50;
+                    }
                 }
             }
 
