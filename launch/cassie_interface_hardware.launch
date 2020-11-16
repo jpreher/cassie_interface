@@ -102,17 +102,17 @@
                     w_hol_mz: 6
                     w_Vdot: 2.7
             stepping:
-                use_qp: false
+                use_qp: true
                 nDomain: 2
                 time_scale: 1.0
                 x_offset: 0.015
                 vx_offset: 0.02
                 vy_offset: 0.03
-                left_stance_gravity_scale: 0.95
-                right_stance_gravity_scale: 0.90
+                left_stance_gravity_scale: 0.90
+                right_stance_gravity_scale: 0.95
                 u_stancetoe_offset: 0.0175
                 stoppable_velocity_threshold: 0.08
-                use_contact_switching: false
+                use_contact_switching: true
                 grf_KpX: 0
                 grf_KpY: 0
                 ddq_KpX: 1.25
@@ -130,36 +130,24 @@
                 vdy_lb: -0.4
                 raibert:
                     phaseThreshold: 0.50
-                    KpX: 0.03
-                    KdX: 0.170
-                    KpY: 0.045
-                    KdY: 0.225
+                    KpX: 0.0
+                    KdX: 0.0
+                    KpY: 0.0
+                    KdY: 0.0
                 qp:
                     clf_use_Vdot_cost: false
                     clf_use_inequality: false
                     clf_use_task_pd: true
-                    kp: '[600, 600, 300, 1500, 1200, 1000, 400, 400, 250]'
-                    kd: '[6, 6, 4, 15, 12, 12, 5, 5, 8]'
-                    nQPIter: 100
-                    reg_ddq: 0.0001
-                    reg_u: 2.25
-                    reg_achilles: 0.000001
-                    reg_rigid: 0.00001
-                    reg_fx: 0.001
-                    reg_fy: 0.001
-                    reg_fz: 0.01
-                    reg_muy: 0.001
-                    reg_muz: 0.01
-                    reg_clf_delta: 0.00001
-                    w_u_chatter: 0.75
+                    kp: '[600, 400, 400, 800, 1400, 200, 400, 400, 30]'
+                    kd: '[5, 4, 4, 5, 18, 3, 4, 4, 1]'
+                    nQPIter: 50
+                    reg_ddq: 0.25
+                    reg_u: 0.10
+                    reg_rigid: 0.05
+                    reg_clf_delta: 1
+                    w_u_chatter: 0.02
                     w_outputs: 1
-                    w_hol_achilles: 8
-                    w_hol_fixed: 8
-                    w_hol_fx: 15
-                    w_hol_fy: 15
-                    w_hol_fz: 15
-                    w_hol_my: 6
-                    w_hol_mz: 6
+                    w_hol_fixed: 0.25
                     w_Vdot: 1
 </rosparam>
 
