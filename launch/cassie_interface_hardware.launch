@@ -112,7 +112,7 @@
                 right_stance_gravity_scale: 0.95
                 u_stancetoe_offset: 0.0175
                 stoppable_velocity_threshold: 0.08
-                use_contact_switching: true
+                use_contact_switching: false
                 grf_KpX: 0
                 grf_KpY: 0
                 ddq_KpX: 1.25
@@ -138,16 +138,26 @@
                     clf_use_Vdot_cost: false
                     clf_use_inequality: false
                     clf_use_task_pd: true
-                    kp: '[600, 400, 400, 800, 1400, 200, 400, 400, 30]'
-                    kd: '[5, 4, 4, 5, 18, 3, 4, 4, 1]'
+                    kp: '[900, 500, 400, 800, 1400, 200, 400, 400, 30]'
+                    kd: '[12, 6, 4, 5, 18, 3, 4, 4, 1]'
                     nQPIter: 50
-                    reg_ddq: 0.25
+                    reg_ddq: 0.05
                     reg_u: 0.10
+                    reg_fx: 0.002
+                    reg_fy: 0.0075
+                    reg_fz: 0.05
+                    reg_muy: 0.0001
+                    reg_muz: 0.005
                     reg_rigid: 0.05
                     reg_clf_delta: 1
-                    w_u_chatter: 0.02
+                    w_u_chatter: 0.01
                     w_outputs: 1
-                    w_hol_fixed: 0.25
+                    w_hol_fx: 3
+                    w_hol_fy: 3
+                    w_hol_fz: 4
+                    w_hol_my: 2
+                    w_hol_mz: 2
+                    w_hol_fixed: 0.20
                     w_Vdot: 1
 </rosparam>
 
