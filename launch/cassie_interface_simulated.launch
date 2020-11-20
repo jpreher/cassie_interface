@@ -75,12 +75,12 @@
                     ik_iter_limit: 10
                 qp:
                     clf_use_Vdot_cost: true
-                    clf_use_inequality: false
+                    clf_use_inequality: true
                     clf_use_task_pd: false
                     clf_gam: 0.0012
                     res_clf_ep: 0.12
-                    Pdiag: '[826.5159,826.5159,826.5159, 187.5402,187.5402,160.88,17.0079,17.0079,14.8985,15.2198,15.2198,14.7754]'
-                    Poffdiag: '[36.6025,36.6025,36.6025,14.843,14.843,13.1774]'
+                    Pdiag: '[1245.425,1245.425,270.6392,99.5274,99.5274,50.9902,13.9243,13.9243,8.5584,6.2947,6.2947,5.099]'
+                    Poffdiag: '[89.4427,89.4427,31.6228,15.8114,15.8114,10]'
                     kp: '[600, 500, 200, 400, 200, 100]'
                     kd: '[18, 15, 8, 10, 4, 4]'
                     nQPIter: 30
@@ -105,11 +105,11 @@
                     w_hol_mz: 6
                     w_Vdot: 3.2
             stepping:
-                use_qp: true
+                use_qp: false
                 nDomain: 2
                 use_one_domain: true
                 time_scale: 1.0
-                vx_offset: 0.0
+                vx_offset: 0.00
                 vy_offset: 0.00
                 left_stance_gravity_scale: 1
                 right_stance_gravity_scale: 1
@@ -133,25 +133,39 @@
                 vdy_lb: -0.3
                 raibert:
                     phaseThreshold: 0.50
-                    KpX: 0.085
-                    KdX: 0.200
+                    KpX: 0.08
+                    KdX: 0.10
                     KpY: 0.086
                     KdY: 0.205
                 qp:
-                    clf_use_Vdot_cost: true
+                    clf_use_Vdot_cost: false
                     clf_use_inequality: false
                     clf_use_task_pd: true
-                    kp: '[400, 400, 150, 600, 600, 150, 150, 150, 30]'
-                    kd: '[3, 3, 2, 5, 5, 2, 2, 2, 1]'
+                    clf_gam: 0.0148
+                    res_clf_ep: 1
+                    Pdiag: '[570.0877,467.8519,220.4069,575.4572,575.4572,669.8011,570.0877,236.8105,102.0083,11.4018,10.4615,8.0481,11.7465,11.7465,12.2288,11.4018,8.6471,6.4516]'
+                    Poffdiag: '[50,44.7214,27.3861,48.9898,48.9898,54.7723,50,27.3861,15.8114]'
+                    kp: '[900, 500, 400, 800, 1400, 200, 400, 400, 30]'
+                    kd: '[12, 6, 4, 5, 18, 3, 4, 4, 1]'
                     nQPIter: 50
-                    reg_ddq: 0.25
-                    reg_u: 0.05
-                    reg_rigid: 0.10
+                    reg_ddq: 0.10
+                    reg_u: 0.50
+                    reg_fx: 0.002
+                    reg_fy: 0.0075
+                    reg_fz: 0.075
+                    reg_muy: 0.0001
+                    reg_muz: 0.005
+                    reg_rigid: 0.05
                     reg_clf_delta: 1
                     w_u_chatter: 0.01
                     w_outputs: 1
-                    w_hol_fixed: 0.30
-                    w_Vdot: 15
+                    w_hol_fx: 3
+                    w_hol_fy: 3
+                    w_hol_fz: 4
+                    w_hol_my: 2
+                    w_hol_mz: 2
+                    w_hol_fixed: 0.2
+                    w_Vdot: 1
 </rosparam>
 
 <node name="cassie_interface_node" pkg="cassie_interface" type="cassie_interface_node" args="" respawn="false" />
