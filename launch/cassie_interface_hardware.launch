@@ -106,13 +106,13 @@
                 nDomain: 2
                 time_scale: 1.0
                 x_offset: 0.015
-                vx_offset: 0.02
-                vy_offset: 0.03
-                left_stance_gravity_scale: 0.90
-                right_stance_gravity_scale: 0.95
+                vx_offset: -0.03
+                vy_offset: 0.0
+                left_stance_gravity_scale: 1
+                right_stance_gravity_scale: 1
                 u_stancetoe_offset: 0.0175
                 stoppable_velocity_threshold: 0.08
-                use_contact_switching: false
+                use_contact_switching: true
                 grf_KpX: 0
                 grf_KpY: 0
                 ddq_KpX: 1.25
@@ -138,26 +138,32 @@
                     clf_use_Vdot_cost: false
                     clf_use_inequality: false
                     clf_use_task_pd: true
-                    kp: '[900, 500, 400, 800, 1400, 200, 400, 400, 30]'
-                    kd: '[12, 6, 4, 5, 18, 3, 4, 4, 1]'
+                    clf_gam: 0.0148
+                    res_clf_ep: 1
+                    Pdiag: '[570.0877,467.8519,220.4069,575.4572,575.4572,669.8011,570.0877,236.8105,102.0083,11.4018,10.4615,8.0481,11.7465,11.7465,12.2288,11.4018,8.6471,6.4516]'
+                    Poffdiag: '[50,44.7214,27.3861,48.9898,48.9898,54.7723,50,27.3861,15.8114]'
+                    kp: '[550, 460, 175, 300, 300, 300, 150, 300, 150]'
+                    kd: '[14.7, 12.1, 4.6, 8, 8, 8, 4, 8, 4]'
                     nQPIter: 50
-                    reg_ddq: 0.05
-                    reg_u: 0.10
-                    reg_fx: 0.002
-                    reg_fy: 0.0075
-                    reg_fz: 0.05
-                    reg_muy: 0.0001
+                    reg_base_ddq: '[0.08, 0.08, 0.08, 0.10, 0.10, 0.05]'
+                    reg_stance_ddq: '[0.4, 0.15, 0.02, 0.02, 0.10, 0.001, 0.10, 0.0001]'
+                    reg_swing_ddq: '[0.05, 0.15, 0.10, 0.10, 0.5, 0.001, 0.5, 0.10]'
+                    reg_u: 0.005
+                    reg_fx: 0.015
+                    reg_fy: 0.015
+                    reg_fz: 0.035
+                    reg_muy: 0.001
                     reg_muz: 0.005
-                    reg_rigid: 0.05
+                    reg_rigid: 0.005
                     reg_clf_delta: 1
-                    w_u_chatter: 0.01
-                    w_outputs: 1
-                    w_hol_fx: 3
-                    w_hol_fy: 3
-                    w_hol_fz: 4
-                    w_hol_my: 2
-                    w_hol_mz: 2
-                    w_hol_fixed: 0.20
+                    w_u_chatter: 0.001
+                    w_outputs: 2
+                    w_hol_fx: 10
+                    w_hol_fy: 10
+                    w_hol_fz: 10
+                    w_hol_my: 7
+                    w_hol_mz: 7
+                    w_hol_fixed: 0.2
                     w_Vdot: 1
 </rosparam>
 
