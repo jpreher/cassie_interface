@@ -279,6 +279,38 @@ int main(int argc, char *argv[])
             achillesSolver.update();
             contact.update();
 
+            // Rigidify swing leg measurements artifically
+            robot.q(LeftShinPitch) *= robot.leftContact;
+            robot.q(LeftHeelSpring) *= robot.leftContact;
+            robot.q(RightHeelSpring) *= robot.rightContact;
+            robot.q(RightShinPitch) *= robot.rightContact;
+            robot.dq(LeftShinPitch) *= robot.leftContact;
+            robot.dq(LeftHeelSpring) *= robot.leftContact;
+            robot.dq(RightHeelSpring) *= robot.rightContact;
+            robot.dq(RightShinPitch) *= robot.rightContact;
+
+            // robot.q(LeftTarsusPitch) = robot.leftContact*robot.q(LeftTarsusPitch) + (1.0 - robot.leftContact)*(0.226892802759263 - robot.q(LeftKneePitch));
+            // robot.q(RightTarsusPitch) = robot.rightContact*robot.q(RightTarsusPitch) + (1.0 - robot.rightContact)*(0.226892802759263 - robot.q(RightKneePitch));
+            // robot.dq(LeftTarsusPitch) = robot.leftContact*robot.dq(LeftTarsusPitch) + (1.0 - robot.leftContact)*(- robot.q(LeftKneePitch));
+            // robot.dq(RightTarsusPitch) = robot.rightContact*robot.dq(RightTarsusPitch) + (1.0 - robot.rightContact)*(- robot.dq(RightKneePitch));
+
+            // Populate kinematics terms
+            proprioception_msg.encoder_position[4]  = robot.q(LeftShinPitch);
+            proprioception_msg.encoder_position[5]  = robot.q(LeftTarsusPitch);
+            proprioception_msg.encoder_position[11] = robot.q(RightShinPitch);
+            proprioception_msg.encoder_position[12]  = robot.q(RightTarsusPitch);
+            proprioception_msg.encoder_velocity[4]  = robot.dq(LeftShinPitch);
+            proprioception_msg.encoder_velocity[5]  = robot.dq(LeftTarsusPitch);
+            proprioception_msg.encoder_velocity[11] = robot.dq(RightShinPitch);
+            proprioception_msg.encoder_velocity[12]  = robot.dq(RightTarsusPitch);
+
+            proprioception_msg.q_achilles[0] = robot.q(LeftHeelSpring);
+            proprioception_msg.q_achilles[1] = robot.rightContact*robot.q(RightHeelSpring);
+            proprioception_msg.dq_achilles[0] = robot.leftContact*robot.dq(LeftHeelSpring); // The velocities are quite violent while swinging, set to zero in swing.
+            proprioception_msg.dq_achilles[1] = robot.rightContact*robot.dq(RightHeelSpring);
+            proprioception_msg.contact[0] = robot.leftContact;
+            proprioception_msg.contact[1] = robot.rightContact;
+
             // Break out measured quantities
             VectorXd w(3), a(3);
             w << proprioception_msg.angular_velocity.x, proprioception_msg.angular_velocity.y, proprioception_msg.angular_velocity.z;
@@ -355,14 +387,6 @@ int main(int argc, char *argv[])
                 proprioception_msg.linear_velocity.y = robot.dq(BasePosY);
                 proprioception_msg.linear_velocity.z = robot.dq(BasePosZ);
             }
-
-            // Populate all other terms
-            proprioception_msg.q_achilles[0] = robot.q(LeftHeelSpring);
-            proprioception_msg.q_achilles[1] = robot.q(RightHeelSpring);
-            proprioception_msg.dq_achilles[0] = 0.; // The velocities are quite violent, set to zero.
-            proprioception_msg.dq_achilles[1] = 0.;
-            proprioception_msg.contact[0] = robot.leftContact;
-            proprioception_msg.contact[1] = robot.rightContact;
 
             if (isSim) {
                 // Robot is in simulation
@@ -455,10 +479,6 @@ int main(int argc, char *argv[])
                     }
                 }
             }
-
-            // Re-update the message for shins in case achillesSolver added an offset.
-            proprioception_msg.encoder_position[4]  = robot.q(LeftShinPitch);
-            proprioception_msg.encoder_position[11] = robot.q(RightShinPitch);
 
             // Radio is all zero until the robot is calibrated. Extra safety precaution.
             for (unsigned int i=0; i<16; i++)
