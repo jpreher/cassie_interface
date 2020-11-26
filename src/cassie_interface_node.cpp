@@ -42,6 +42,7 @@
 #include <control_eigen_utilities/limits.hpp>
 #include <cassie_description/cassie_model.hpp>
 #include <cassie_estimation/heelspring_solver.hpp>
+#include <cassie_estimation/rigidtarsus_solver.hpp>
 #include <cassie_estimation/contact_classifier.hpp>
 #include <cassie_estimation/contact_ekf.hpp>
 #include <yaml_eigen_utilities/yaml_eigen_utilities.hpp>
@@ -154,6 +155,7 @@ int main(int argc, char *argv[])
     cassie_model::Cassie robot;
     ContactClassifier contact(nh, robot, 0.0005);
     HeelspringSolver achillesSolver(nh, robot);
+    RigidTarsusSolver tarsusSolver(robot);
     KinematicsHipVelocityEstimator velocityEstimator(nh, robot, true);
     contact_ekf ekf(nh, robot, true);
 
@@ -277,6 +279,7 @@ int main(int argc, char *argv[])
         if (cassie_out.isCalibrated) {
             // Update contact / achilles and export
             achillesSolver.update();
+            tarsusSolver.update();
             contact.update();
 
             // Rigidify swing leg measurements artifically
@@ -289,10 +292,10 @@ int main(int argc, char *argv[])
             robot.dq(RightHeelSpring) *= robot.rightContact;
             robot.dq(RightShinPitch) *= robot.rightContact;
 
-            // robot.q(LeftTarsusPitch) = robot.leftContact*robot.q(LeftTarsusPitch) + (1.0 - robot.leftContact)*(0.226892802759263 - robot.q(LeftKneePitch));
-            // robot.q(RightTarsusPitch) = robot.rightContact*robot.q(RightTarsusPitch) + (1.0 - robot.rightContact)*(0.226892802759263 - robot.q(RightKneePitch));
-            // robot.dq(LeftTarsusPitch) = robot.leftContact*robot.dq(LeftTarsusPitch) + (1.0 - robot.leftContact)*(- robot.q(LeftKneePitch));
-            // robot.dq(RightTarsusPitch) = robot.rightContact*robot.dq(RightTarsusPitch) + (1.0 - robot.rightContact)*(- robot.dq(RightKneePitch));
+            robot.q(LeftTarsusPitch) = robot.leftContact*robot.q(LeftTarsusPitch) + (1.0 - robot.leftContact)*tarsusSolver.getLeftRigidTarsusPosition();
+            robot.q(RightTarsusPitch) = robot.rightContact*robot.q(RightTarsusPitch) + (1.0 - robot.rightContact)*tarsusSolver.getRightRigidTarsusPosition();
+            robot.dq(LeftTarsusPitch) = robot.leftContact*robot.dq(LeftTarsusPitch) + (1.0 - robot.leftContact)*tarsusSolver.getLeftRigidTarsusVelocity();
+            robot.dq(RightTarsusPitch) = robot.rightContact*robot.dq(RightTarsusPitch) + (1.0 - robot.rightContact)*tarsusSolver.getRightRigidTarsusVelocity();
 
             // Populate kinematics terms
             proprioception_msg.encoder_position[4]  = robot.q(LeftShinPitch);
