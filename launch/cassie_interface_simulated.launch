@@ -105,7 +105,7 @@
                     w_hol_mz: 6
                     w_Vdot: 3.2
             stepping:
-                use_qp: false
+                use_qp: true
                 nDomain: 2
                 use_one_domain: true
                 time_scale: 1.0
@@ -145,27 +145,29 @@
                     res_clf_ep: 1
                     Pdiag: '[570.0877,467.8519,220.4069,575.4572,575.4572,669.8011,570.0877,236.8105,102.0083,11.4018,10.4615,8.0481,11.7465,11.7465,12.2288,11.4018,8.6471,6.4516]'
                     Poffdiag: '[50,44.7214,27.3861,48.9898,48.9898,54.7723,50,27.3861,15.8114]'
-                    kp: '[900, 500, 400, 800, 1400, 200, 400, 400, 30]'
-                    kd: '[12, 6, 4, 5, 18, 3, 4, 4, 1]'
+                    kp: '[150, 150, 150, 150, 150, 150, 150, 150, 150]'
+                    kd: '[4, 4, 4, 4, 4, 4, 4, 4, 4]'
                     nQPIter: 50
-                    reg_ddq: 0.10
-                    reg_u: 0.50
-                    reg_fx: 0.002
-                    reg_fy: 0.0075
-                    reg_fz: 0.075
+                    reg_base_ddq: '[0.01, 0.01, 0.01 0.0001, 0.0001, 0.0001]'
+                    reg_stance_ddq: '[0.05, 0.05, 0.05, 0.05, 0.25, 0.0001, 0.25, 0.0001]'
+                    reg_swing_ddq: '[0.001, 0.001, 0.02, 0.04, 0.01, 0.0001, 0.01, 0.02]'
+                    reg_u: 0.0001
+                    reg_fx: 0.001
+                    reg_fy: 0.001
+                    reg_fz: 0.01
                     reg_muy: 0.0001
-                    reg_muz: 0.005
-                    reg_rigid: 0.05
+                    reg_muz: 0.0001
+                    reg_rigid: 0.04
                     reg_clf_delta: 1
-                    w_u_chatter: 0.01
+                    w_u_chatter: 0.001
                     w_outputs: 1
-                    w_hol_fx: 3
-                    w_hol_fy: 3
-                    w_hol_fz: 4
-                    w_hol_my: 2
-                    w_hol_mz: 2
+                    w_hol_fx: 1
+                    w_hol_fy: 1
+                    w_hol_fz: 1
+                    w_hol_my: 1
+                    w_hol_mz: 1
                     w_hol_fixed: 0.2
-                    w_Vdot: 1
+                    w_Vdot: 1.25
 </rosparam>
 
 <node name="cassie_interface_node" pkg="cassie_interface" type="cassie_interface_node" args="" respawn="false" />
