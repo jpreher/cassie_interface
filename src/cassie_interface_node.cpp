@@ -284,21 +284,21 @@ int main(int argc, char *argv[])
 
 
             // Populate kinematics terms
-            proprioception_msg.encoder_position[4]  = robot.q(LeftShinPitch);
-            proprioception_msg.encoder_position[5]  = robot.q(LeftTarsusPitch);
-            proprioception_msg.encoder_position[11] = robot.q(RightShinPitch);
+            proprioception_msg.encoder_position[4]   = robot.q(LeftShinPitch);
+            proprioception_msg.encoder_position[5]   = robot.q(LeftTarsusPitch);
+            proprioception_msg.encoder_position[11]  = robot.q(RightShinPitch);
             proprioception_msg.encoder_position[12]  = robot.q(RightTarsusPitch);
-            proprioception_msg.encoder_velocity[4]  = robot.dq(LeftShinPitch);
-            proprioception_msg.encoder_velocity[5]  = robot.dq(LeftTarsusPitch);
-            proprioception_msg.encoder_velocity[11] = robot.dq(RightShinPitch);
+            proprioception_msg.encoder_velocity[4]   = robot.dq(LeftShinPitch);
+            proprioception_msg.encoder_velocity[5]   = robot.dq(LeftTarsusPitch);
+            proprioception_msg.encoder_velocity[11]  = robot.dq(RightShinPitch);
             proprioception_msg.encoder_velocity[12]  = robot.dq(RightTarsusPitch);
 
-            proprioception_msg.q_achilles[0] = robot.q(LeftHeelSpring);
-            proprioception_msg.q_achilles[1] = robot.q(RightHeelSpring);
+            proprioception_msg.q_achilles[0]  = robot.q(LeftHeelSpring);
+            proprioception_msg.q_achilles[1]  = robot.q(RightHeelSpring);
             proprioception_msg.dq_achilles[0] = robot.dq(LeftHeelSpring); // The velocities are quite violent while swinging, set to zero in swing.
             proprioception_msg.dq_achilles[1] = robot.dq(RightHeelSpring);
-            proprioception_msg.contact[0] = robot.leftContact;
-            proprioception_msg.contact[1] = robot.rightContact;
+            proprioception_msg.contact[0]     = robot.leftContact;
+            proprioception_msg.contact[1]     = robot.rightContact;
 
             // Break out measured quantities
             VectorXd w(3), a(3);
@@ -382,7 +382,7 @@ int main(int argc, char *argv[])
                 cassie_out.pelvis.radio.channel[SA] = 1.0;
                 cassie_out.pelvis.radio.channel[SB] = 0.;
                 cassie_out.pelvis.radio.channel[LS] = 1.0;
-                cassie_out.pelvis.radio.channel[S1] = -0.72;
+                // cassie_out.pelvis.radio.channel[S1] = -0.72;
 
                 // Use real velocity from gazebo
                 Eigen::Quaterniond quat;

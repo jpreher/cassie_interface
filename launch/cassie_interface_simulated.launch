@@ -105,7 +105,7 @@
                     w_hol_mz: 6
                     w_Vdot: 3.2
             stepping:
-                use_qp: true
+                use_qp: false
                 nDomain: 2
                 use_one_domain: true
                 time_scale: 1.0
@@ -116,16 +116,15 @@
                 u_stancetoe_offset: 0
                 stoppable_velocity_threshold: 0.2
                 use_contact_switching: false
-                grf_KpX: 0
-                grf_KpY: 0
                 ddq_KpX: 2.10
                 ddq_KdX: 1.00
                 ddq_KiX: 1.35
                 ddq_KpY: 1.00
                 ddq_KdY: 0.60
                 ddq_KiY: 0.00
-                kp: '[1600, 800, 400, 600, 500, 400, 400, 400, 30]'
-                kd: '[25, 16, 5, 14, 12, 6, 6, 6, 2]'
+                velocity_integrator_bleed_constant: 0.99999
+                kp: '[1600, 1000, 600, 600, 600, 600, 600, 600, 30]'
+                kd: '[25, 20, 10, 14, 14, 8, 8, 10, 2]'
                 gaitlib: 'package://cassie_controllers/gaits/20200927.yaml'
                 vdx_ub: 1.0
                 vdx_lb: -0.4
@@ -133,10 +132,10 @@
                 vdy_lb: -0.3
                 raibert:
                     phaseThreshold: 0.50
-                    KpX: 0.08
-                    KdX: 0.10
+                    KpX: 0.045
+                    KdX: 0.200
                     KpY: 0.086
-                    KdY: 0.205
+                    KdY: 0.220
                 qp:
                     clf_use_Vdot_cost: false
                     clf_use_inequality: false
@@ -145,28 +144,28 @@
                     res_clf_ep: 1
                     Pdiag: '[570.0877,467.8519,220.4069,575.4572,575.4572,669.8011,570.0877,236.8105,102.0083,11.4018,10.4615,8.0481,11.7465,11.7465,12.2288,11.4018,8.6471,6.4516]'
                     Poffdiag: '[50,44.7214,27.3861,48.9898,48.9898,54.7723,50,27.3861,15.8114]'
-                    kp: '[150, 150, 150, 150, 150, 150, 150, 150, 150]'
-                    kd: '[4, 4, 4, 4, 4, 4, 4, 4, 4]'
+                    kp: '[2500, 2000, 1200, 2000, 2000, 1000, 2000, 1200, 1500]'
+                    kd: '[25, 20, 12, 20, 20, 10, 20, 12, 16]'
                     nQPIter: 50
-                    reg_base_ddq: '[0.01, 0.01, 0.01 0.0001, 0.0001, 0.0001]'
-                    reg_stance_ddq: '[0.05, 0.05, 0.05, 0.05, 0.25, 0.0001, 0.25, 0.0001]'
-                    reg_swing_ddq: '[0.001, 0.001, 0.02, 0.04, 0.01, 0.0001, 0.01, 0.02]'
+                    reg_base_ddq: '[0.001, 0.001, 0.001, 0.001, 0.001, 0.001]'
+                    reg_stance_ddq: '[0.001, 0.001, 0.001 0.001, 0.001, 0.001, 0.001, 0.001]'
+                    reg_swing_ddq: '[0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001]'
                     reg_u: 0.0001
-                    reg_fx: 0.001
-                    reg_fy: 0.001
-                    reg_fz: 0.01
-                    reg_muy: 0.0001
-                    reg_muz: 0.0001
-                    reg_rigid: 0.04
+                    reg_fx: 0.0002
+                    reg_fy: 0.0002
+                    reg_fz: 0.0002
+                    reg_muy: 0.0002
+                    reg_muz: 0.0002
+                    reg_rigid: 0.005
                     reg_clf_delta: 1
                     w_u_chatter: 0.001
-                    w_outputs: 1
-                    w_hol_fx: 1
-                    w_hol_fy: 1
-                    w_hol_fz: 1
-                    w_hol_my: 1
-                    w_hol_mz: 1
-                    w_hol_fixed: 0.2
+                    w_outputs: 0.2
+                    w_hol_fx: 1.5
+                    w_hol_fy: 1.5
+                    w_hol_fz: 1.5
+                    w_hol_my: 1.5
+                    w_hol_mz: 1.5
+                    w_hol_fixed: 0.05
                     w_Vdot: 1.25
 </rosparam>
 
