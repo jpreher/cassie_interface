@@ -282,20 +282,6 @@ int main(int argc, char *argv[])
             tarsusSolver.update();
             contact.update();
 
-            // Rigidify swing leg measurements artifically
-            robot.q(LeftShinPitch) *= robot.leftContact;
-            robot.q(LeftHeelSpring) *= robot.leftContact;
-            robot.q(RightHeelSpring) *= robot.rightContact;
-            robot.q(RightShinPitch) *= robot.rightContact;
-            robot.dq(LeftShinPitch) *= robot.leftContact;
-            robot.dq(LeftHeelSpring) *= robot.leftContact;
-            robot.dq(RightHeelSpring) *= robot.rightContact;
-            robot.dq(RightShinPitch) *= robot.rightContact;
-
-            robot.q(LeftTarsusPitch) = robot.leftContact*robot.q(LeftTarsusPitch) + (1.0 - robot.leftContact)*tarsusSolver.getLeftRigidTarsusPosition();
-            robot.q(RightTarsusPitch) = robot.rightContact*robot.q(RightTarsusPitch) + (1.0 - robot.rightContact)*tarsusSolver.getRightRigidTarsusPosition();
-            robot.dq(LeftTarsusPitch) = robot.leftContact*robot.dq(LeftTarsusPitch) + (1.0 - robot.leftContact)*tarsusSolver.getLeftRigidTarsusVelocity();
-            robot.dq(RightTarsusPitch) = robot.rightContact*robot.dq(RightTarsusPitch) + (1.0 - robot.rightContact)*tarsusSolver.getRightRigidTarsusVelocity();
 
             // Populate kinematics terms
             proprioception_msg.encoder_position[4]  = robot.q(LeftShinPitch);
@@ -308,9 +294,9 @@ int main(int argc, char *argv[])
             proprioception_msg.encoder_velocity[12]  = robot.dq(RightTarsusPitch);
 
             proprioception_msg.q_achilles[0] = robot.q(LeftHeelSpring);
-            proprioception_msg.q_achilles[1] = robot.rightContact*robot.q(RightHeelSpring);
-            proprioception_msg.dq_achilles[0] = robot.leftContact*robot.dq(LeftHeelSpring); // The velocities are quite violent while swinging, set to zero in swing.
-            proprioception_msg.dq_achilles[1] = robot.rightContact*robot.dq(RightHeelSpring);
+            proprioception_msg.q_achilles[1] = robot.q(RightHeelSpring);
+            proprioception_msg.dq_achilles[0] = robot.dq(LeftHeelSpring); // The velocities are quite violent while swinging, set to zero in swing.
+            proprioception_msg.dq_achilles[1] = robot.dq(RightHeelSpring);
             proprioception_msg.contact[0] = robot.leftContact;
             proprioception_msg.contact[1] = robot.rightContact;
 
@@ -396,7 +382,7 @@ int main(int argc, char *argv[])
                 cassie_out.pelvis.radio.channel[SA] = 1.0;
                 cassie_out.pelvis.radio.channel[SB] = 0.;
                 cassie_out.pelvis.radio.channel[LS] = 1.0;
-                //cassie_out.pelvis.radio.channel[S1] = -0.5;
+                cassie_out.pelvis.radio.channel[S1] = -0.72;
 
                 // Use real velocity from gazebo
                 Eigen::Quaterniond quat;
