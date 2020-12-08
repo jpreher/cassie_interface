@@ -475,7 +475,13 @@ int main(int argc, char *argv[])
 
             // Write log
             if ( log_estimation ) {
-                log << static_cast<float>(ros::Time::now().toSec()),                                                                                                                // 1
+                double ts = ros::Time::now().toSec();
+                // Move zero to closer time rather than 1970 so it fits in a float
+                // Still bad practice to put time in floats, but this is just for logging
+                if ( !isSim )
+                    ts -= 1.6074545e9;
+
+                log << static_cast<float>(ts),                                                                                                                // 1
                        static_cast<float>(proprioception_msg.orientation.w),
                        static_cast<float>(proprioception_msg.orientation.x),
                        static_cast<float>(proprioception_msg.orientation.y),
@@ -493,10 +499,10 @@ int main(int argc, char *argv[])
                        dencoder.cast <float> (),                                 // 14
                        static_cast<float>(proprioception_msg.q_achilles[0]),
                        static_cast<float>(proprioception_msg.q_achilles[1]),     // 2
-                        static_cast<float>(proprioception_msg.dq_achilles[0]),
-                        static_cast<float>(proprioception_msg.dq_achilles[1]),   // 2
+                       static_cast<float>(proprioception_msg.dq_achilles[0]),
+                       static_cast<float>(proprioception_msg.dq_achilles[1]),   // 2
                        static_cast<float>(proprioception_msg.contact[0]),
-                       static_cast<float>(proprioception_msg.contact[1]);                                                    // 2
+                       static_cast<float>(proprioception_msg.contact[1]);   
                 logfile.write(reinterpret_cast<char *>(log.data()), (log.size())*sizeof(float));
             }
         }
