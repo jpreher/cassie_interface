@@ -42,7 +42,6 @@
 #include <control_eigen_utilities/limits.hpp>
 #include <cassie_description/cassie_model.hpp>
 #include <cassie_estimation/heelspring_solver.hpp>
-#include <cassie_estimation/rigidtarsus_solver.hpp>
 #include <cassie_estimation/contact_classifier.hpp>
 #include <cassie_estimation/contact_ekf.hpp>
 #include <yaml_eigen_utilities/yaml_eigen_utilities.hpp>
@@ -155,12 +154,11 @@ int main(int argc, char *argv[])
     cassie_model::Cassie robot;
     ContactClassifier contact(nh, robot, 0.0005);
     HeelspringSolver achillesSolver(nh, robot);
-    RigidTarsusSolver tarsusSolver(robot);
     KinematicsHipVelocityEstimator velocityEstimator(nh, robot, true);
     contact_ekf ekf(nh, robot, true);
 
     // Whether to log data
-    VectorXd log = VectorXd::Zero(46);
+    VectorXf log = VectorXf::Zero(48);
     std::fstream logfile;
     bool log_estimation = false;
     ros::param::get("/cassie/log_estimation", log_estimation);
@@ -279,9 +277,7 @@ int main(int argc, char *argv[])
         if (cassie_out.isCalibrated) {
             // Update contact / achilles and export
             achillesSolver.update();
-            tarsusSolver.update();
             contact.update();
-
 
             // Populate kinematics terms
             proprioception_msg.encoder_position[4]   = robot.q(LeftShinPitch);
@@ -382,7 +378,7 @@ int main(int argc, char *argv[])
                 cassie_out.pelvis.radio.channel[SA] = 1.0;
                 cassie_out.pelvis.radio.channel[SB] = 0.;
                 cassie_out.pelvis.radio.channel[LS] = 1.0;
-                // cassie_out.pelvis.radio.channel[S1] = -0.72;
+                // cassie_out.pelvis.radio.channel[S1] = -0.80;
 
                 // Use real velocity from gazebo
                 Eigen::Quaterniond quat;
@@ -479,16 +475,29 @@ int main(int argc, char *argv[])
 
             // Write log
             if ( log_estimation ) {
-                log << ros::Time::now().toSec(),                                                                                                                // 1
-                        proprioception_msg.orientation.w, proprioception_msg.orientation.x, proprioception_msg.orientation.y, proprioception_msg.orientation.z, // 4
-                        proprioception_msg.angular_velocity.x, proprioception_msg.angular_velocity.y, proprioception_msg.angular_velocity.z,                    // 3
-                        proprioception_msg.linear_acceleration.x, proprioception_msg.linear_acceleration.y, proprioception_msg.linear_acceleration.z,           // 3
-                        proprioception_msg.linear_velocity.x, proprioception_msg.linear_velocity.y, proprioception_msg.linear_velocity.z,                       // 3
-                        Map<VectorXd>(proprioception_msg.encoder_position.data(), proprioception_msg.encoder_position.size()),                                  // 14
-                        Map<VectorXd>(proprioception_msg.encoder_velocity.data(), proprioception_msg.encoder_position.size()),                                  // 14
-                        Map<VectorXd>(proprioception_msg.q_achilles.data(), proprioception_msg.q_achilles.size()),                                              // 2
-                        Map<VectorXd>(proprioception_msg.contact.data(), proprioception_msg.contact.size());                                                    // 2
-                logfile.write(reinterpret_cast<char *>(log.data()), (log.size())*sizeof(double));
+                log << static_cast<float>(ros::Time::now().toSec()),                                                                                                                // 1
+                       static_cast<float>(proprioception_msg.orientation.w),
+                       static_cast<float>(proprioception_msg.orientation.x),
+                       static_cast<float>(proprioception_msg.orientation.y),
+                       static_cast<float>(proprioception_msg.orientation.z), // 4
+                       static_cast<float>(proprioception_msg.angular_velocity.x),
+                       static_cast<float>(proprioception_msg.angular_velocity.y),
+                       static_cast<float>(proprioception_msg.angular_velocity.z),// 3
+                       static_cast<float>(proprioception_msg.linear_acceleration.x),
+                       static_cast<float>(proprioception_msg.linear_acceleration.y),
+                       static_cast<float>(proprioception_msg.linear_acceleration.z), // 3
+                       static_cast<float>(proprioception_msg.linear_velocity.x),
+                       static_cast<float>(proprioception_msg.linear_velocity.y),
+                       static_cast<float>(proprioception_msg.linear_velocity.z), // 3
+                       encoder.cast <float> (),                                  // 14
+                       dencoder.cast <float> (),                                 // 14
+                       static_cast<float>(proprioception_msg.q_achilles[0]),
+                       static_cast<float>(proprioception_msg.q_achilles[1]),     // 2
+                        static_cast<float>(proprioception_msg.dq_achilles[0]),
+                        static_cast<float>(proprioception_msg.dq_achilles[1]),   // 2
+                       static_cast<float>(proprioception_msg.contact[0]),
+                       static_cast<float>(proprioception_msg.contact[1]);                                                    // 2
+                logfile.write(reinterpret_cast<char *>(log.data()), (log.size())*sizeof(float));
             }
         }
     }
