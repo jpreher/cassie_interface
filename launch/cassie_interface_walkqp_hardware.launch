@@ -1,0 +1,199 @@
+<?xml version="1.0" ?>
+<launch>
+
+<rosparam>
+    cassie:
+        is_simulation: false
+        dt: 0.0005
+        log_estimation: true
+        log_controller: true
+        interface:
+            use_ekf: true
+            safe_torque_limit: '[90, 60, 90, 200, 40, 90, 60, 90, 200, 40]'
+            heelspring_solver:
+                zero_springs_on_startup: true
+                num_zeroing_samples: 2000
+            contact_classifier:
+                use_sigmoid: false
+                sigmoid_A: 0.30
+                sigmoid_B: 30
+                sigmoid_power: 1
+                linear_lb: 65
+                linear_ub: 115
+                lowpass_dt_cutoff: 0.005
+            kinematics_velocity:
+                lowpass_vx_dt_cutoff: 0.09
+                lowpass_vy_dt_cutoff: 0.09
+                lowpass_vz_dt_cutoff: 0.09
+            contact_ekf:
+                apply_post_filter: true
+                post_filter_dt_cutoff_x: 0.01
+                post_filter_dt_cutoff_y: 0.01
+                post_filter_dt_cutoff_z: 0.01
+                gyro_noise_std: 0.00006
+                gyro_bias_noise_std: 0.0001
+                accel_noise_std: 0.006
+                accel_bias_noise_std: 0.0001
+                contact_noise_std: 0.001
+                encoder_noise_std: 0.018
+                contact_std: 0.001
+                contact_yaw_std: 0.001
+                prior_base_rotation_std: 0.01
+                prior_base_position_std: 0.01
+                prior_base_velocity_std: 0.1
+                prior_contact_position_std: 0.025
+                prior_gyro_bias_std: 0.01
+                prior_accel_bias_std: 0.1
+                prior_forward_kinematics_std: 0.03
+                prior_contact_yaw_std: 0.03
+        locomotion_control:
+            dt: 0.001
+            standing:
+                use_qp: true
+                use_lateral_comp: true
+                Kp_lateral_compensator: 3.0
+                Kd_lateral_compensator: 0.04
+                kp: '[200., 100., 300., 400., 50.]'
+                kd: '[5., 2., 6., 8., 2.]'
+                pose_command:
+                    x_com_offset: -0.0215
+                    x_lowpass_dt_cutoff: 0.75
+                    height_lowpass_dt_cutoff: 2.25
+                    pitch_lowpass_dt_cutoff: 2.25
+                    lateral_lowpass_dt_cutoff: 2.25
+                    height_lb: -0.90
+                    height_ub: -0.40
+                    lateral_lb: -0.90
+                    lateral_ub: 0.90
+                    pitch_lb: 0
+                    pitch_ub: 0
+                inverse_kinematics:
+                    ik_xtol: 0.00000001
+                    ik_iter_limit: 10
+                qp:
+                    clf_use_Vdot_cost: true
+                    clf_use_inequality: false
+                    clf_use_task_pd: false
+                    clf_gam: 0.0012
+                    res_clf_ep: 0.30
+                    Pdiag: '[826.5159,826.5159,95.306,97.5402,97.5402,80.88,7.0079,7.0079,4.8985,5.2198,5.2198,4.7754]'
+                    Poffdiag: '[36.6025,36.6025,12.3961,14.843,14.843,13.1774]'
+                    kp: '[600, 500, 200, 400, 200, 100]'
+                    kd: '[18, 15, 8, 10, 4, 4]'
+                    nQPIter: 30
+                    reg_ddq: 0.08
+                    reg_u: 1.8
+                    reg_achilles: 0.0001
+                    reg_rigid: 0.001
+                    reg_fx: 0.125
+                    reg_fy: 0.00001
+                    reg_fz: 0.005
+                    reg_muy: 0.01
+                    reg_muz: 0.20
+                    reg_clf_delta: 0.15
+                    w_u_chatter: 0.03
+                    w_outputs: 1
+                    w_hol_achilles: 8
+                    w_hol_fixed: 8
+                    w_hol_fx: 15
+                    w_hol_fy: 15
+                    w_hol_fz: 15
+                    w_hol_my: 6
+                    w_hol_mz: 6
+                    w_Vdot: 2.7
+            stepping:
+                use_qp: true
+                nDomain: 2
+                time_scale: 1.0
+                x_offset: 0.015
+                vx_offset: 0.0
+                vy_offset: 0.0
+                force_z_scale: 1
+                force_sp_scale: 1
+                left_stance_gravity_scale: 1
+                right_stance_gravity_scale: 1
+                u_stancetoe_offset: 0.0175
+                stoppable_velocity_threshold: 0.08
+                use_contact_switching: false
+                ddq_KpX: 3
+                ddq_KdX: 2.5
+                ddq_KiX: 0
+                ddq_KpY: 3
+                ddq_KdY: 2.5
+                ddq_KiY: 0
+                Kp_grf_z: 3600
+                Kd_grf_z: 120
+                Kd_grf_vx: 15
+                Kd_grf_vy: 25
+                Kp_grf_roll: 30
+                Kd_grf_roll: 8
+                Kp_grf_pitch: 50
+                Kd_grf_pitch: 12
+                velocity_integrator_bleed_constant: 0.9995
+                kp: '[900, 500, 300, 250, 200, 200, 200, 200, 25]'
+                kd: '[12, 6, 4, 6, 5, 6, 4, 4, 2]'
+                gaitlib: 'package://cassie_controllers/gaits/20200927.yaml'
+                vdx_ub: 0.75
+                vdx_lb: -0.4
+                vdy_ub: 0.4
+                vdy_lb: -0.4
+                raibert:
+                    phaseThreshold: 0.50
+                    KpX: 0.07
+                    KdX: 0.12
+                    KpY: 0.08
+                    KdY: 0.18
+                qp:
+                    clf_use_Vdot_cost: true
+                    clf_use_inequality: false
+                    clf_use_task_pd: false
+                    clf_gam: 0.0434
+                    res_clf_ep: 0.1
+                    Pdiag: '[921.8431,682.436197,126.600813,126.600813,1376.798721,795.889176,442.364338,177.526474,173.077003,12.783663,11.311270,6.410681,6.410681,16.282363,12.496938,10.224149,7.785051,7.589929]'
+                    Poffdiag: '[72.111,60.332413,19.748418,19.748418,84.557673,63.686733,43.266615,22.803509,22.803509]'
+                    kp: '[1800, 600, 300, 300, 2000, 1600, 900, 300, 300]'
+                    kd: '[16, 6, 4, 4, 40, 12, 8, 5, 5]'
+                    #kp: '[1200, 1200, 300, 300, 0, 0, 0, 0, 0]'
+                    #kd: '[16, 18, 4, 4, 14, 0, 0, 0, 0]'
+                    nQPIter: 50
+                    reg_base_ddq: '[0.01, 0.01, 0.01, 0.01, 0.01, 0.01]'
+                    reg_stance_ddq: '[0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01]'
+                    reg_swing_ddq: '[0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01]'
+                    reg_stance_u: '[1, 1, 1, 1, 1]'
+                    reg_swing_u: '[1, 1, 1, 1, 1]'
+                    reg_fx: 1
+                    reg_fy: 1
+                    reg_fz: 1
+                    reg_muy: 1
+                    reg_muz: 1
+                    reg_rigid: 1
+                    reg_clf_delta: 1
+                    w_outputs: 1.10
+                    w_hol_fx: 1.0
+                    w_hol_fy: 1.0
+                    w_hol_fz: 1.0
+                    w_hol_my: 1.0
+                    w_hol_mz: 1.0
+                    w_hol_fixed: 1
+                    w_Vdot: 1.10
+</rosparam>
+
+<node name="cassie_interface_node" 
+    pkg="cassie_interface" 
+    type="cassie_interface_node" 
+    args="" 
+    respawn="false"
+    launch-prefix="nice -n -18 taskset -c 2" 
+/>
+<!--launch-prefix="nice -n -20 taskset -c 2" -->
+
+<node name="locomotion_node" 
+    pkg="cassie_controllers" 
+    type="locomotion_node" 
+    args="" 
+    respawn="false"
+    output="screen"
+    launch-prefix="nice -n -18 taskset -c 3" 
+/>
+
+</launch>
