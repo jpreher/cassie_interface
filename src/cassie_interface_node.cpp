@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
     contact_ekf ekf(nh, robot, true);
 
     // Whether to log data
-    VectorXf log = VectorXf::Zero(48);
+    VectorXf log = VectorXf::Zero(49);
     std::fstream logfile;
     bool log_estimation = false;
     ros::param::get("/cassie/log_estimation", log_estimation);
@@ -475,13 +475,15 @@ int main(int argc, char *argv[])
 
             // Write log
             if ( log_estimation ) {
-                double ts = ros::Time::now().toSec();
+                double tsec = static_cast<double>(ros::Time::now().sec);
+                double tnsec = static_cast<double>(ros::Time::now().nsec)*1e-9;
                 // Move zero to closer time rather than 1970 so it fits in a float
                 // Still bad practice to put time in floats, but this is just for logging
                 if ( !isSim )
-                    ts -= 1.6074545e9;
+                    tsec -= 1.6074545e9;
 
-                log << static_cast<float>(ts),                                                                                                                // 1
+                // Use floats for logging size and speed
+                log << static_cast<float>(tsec), static_cast<float>(tnsec), // 2                                                                                                             // 1
                        static_cast<float>(proprioception_msg.orientation.w),
                        static_cast<float>(proprioception_msg.orientation.x),
                        static_cast<float>(proprioception_msg.orientation.y),
