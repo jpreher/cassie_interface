@@ -118,65 +118,73 @@
                 u_stancetoe_offset: 0
                 stoppable_velocity_threshold: 0.2
                 use_contact_switching: false
-                ddq_KpX: 3
-                ddq_KdX: 2.5
-                ddq_KiX: 0
-                ddq_KpY: 3
-                ddq_KdY: 2.5
-                ddq_KiY: 0
-                Kp_grf_z: 1600
-                Kd_grf_z: 100
-                Kd_grf_vx: 15
-                Kd_grf_vy: 25
-                Kp_grf_roll: 20
-                Kd_grf_roll: 8
-                Kp_grf_pitch: 80
-                Kd_grf_pitch: 14
                 velocity_integrator_bleed_constant: 0.99999
                 kp: '[1600, 1000, 600, 600, 600, 600, 600, 600, 30]'
                 kd: '[25, 20, 10, 14, 14, 8, 8, 10, 2]'
                 gaitlib: 'package://cassie_controllers/gaits/20200927.yaml'
                 vdx_ub: 1.0
-                vdx_lb: -0.4
+                vdx_lb: -0.40
                 vdy_ub: 0.3
                 vdy_lb: -0.3
+                acceleration_regulation:
+                    ddq_KpX: 2
+                    ddq_KdX: 3
+                    ddq_KiX: 0
+                    ddq_KpY: 2
+                    ddq_KdY: 3
+                    ddq_KiY: 0
+                force_regulation:
+                    Kp_grf_z: 1400
+                    Kd_grf_z: 60
+                    Kd_grf_vx: 0
+                    Kd_grf_vy: 0
+                    Kd_grf_ffx: 0
+                    Kd_grf_ffy: 0
+                    Kp_grf_roll: 0
+                    Kd_grf_roll: 0
+                    Kp_grf_pitch: 0
+                    Kd_grf_pitch: 0
                 raibert:
                     phaseThreshold: 0.50
-                    KpX: 0.06
+                    KpX: 0.04
                     KdX: 0.18
-                    KpY: 0.09
+                    KiX: 0.0
+                    KvX: 0.005
+                    KpY: 0.085
                     KdY: 0.18
+                    KvY: 0.002
+                    KiY: 0.0
                 qp:
                     clf_use_Vdot_cost: true
                     clf_use_inequality: false
                     clf_use_task_pd: false
                     clf_gam: 0.0172
                     res_clf_ep: 0.1
-                    Pdiag: '[5900.5874,5403.0127,3700.3115,4265.2438,6380.6384,3211.873,3211.873,2643.8432,3174.2917,25.3921,24.6613,21.3638,24.6254,29.1235,20.7326,20.7326,19.706,20.49]'
-                    Poffdiag: '[232.379,219.089,173.2051,173.2051,219.089,154.9193,154.9193,134.1641,154.9193]'
+                    Pdiag: '[6278.1439,5403.0127,4003.4887,4202.262,6204.1987,3211.873,3320.5226,2841.7255,3174.2917,31.9667,24.6613,28.3089,23.0167,25.3285,20.7326,23.4796,25.9413,20.49]'
+                    Poffdiag: '[274.9545,219.089,212.132,164.3168,195.9592,154.9193,169.7056,164.3168,154.9193]'
                     kp: '[3000, 2500, 2500, 2000, 2500, 1600, 2000, 2500, 1500]'
                     kd: '[35, 30, 20, 25, 40, 14, 20, 20, 16]'
                     nQPIter: 50
                     reg_base_ddq: '[0.001, 0.001, 0.001, 0.001, 0.001, 0.001]'
-                    reg_stance_ddq: '[0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001]'
+                    reg_stance_ddq: '[0.001, 0.001, 0.001, 0.001, 0.6, 0.001, 0.6, 0.001]'
                     reg_swing_ddq: '[0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001]'
-                    reg_stance_u: '[0.02, 0.02, 0.02, 0.02, 0.02]'
-                    reg_swing_u: '[0.04, 0.04, 0.04, 0.04, 0.04]'
+                    reg_stance_u: '[0.01, 0.01, 0.01, 0.01, 0.01]'
+                    reg_swing_u: '[0.01, 0.01, 0.01, 0.01, 0.01]'
                     reg_fx: 1
                     reg_fy: 1
-                    reg_fz: 1
+                    reg_fz: 2
                     reg_muy: 1
                     reg_muz: 1
                     reg_rigid: 1
                     reg_clf_delta: 1
-                    w_outputs: 1
+                    w_outputs: 1.4
                     w_hol_fx: 1
                     w_hol_fy: 1
                     w_hol_fz: 1
                     w_hol_my: 1
                     w_hol_mz: 1
                     w_hol_fixed: 1
-                    w_Vdot: 1
+                    w_Vdot: 1.4
 </rosparam>
 
 <node name="cassie_interface_node" pkg="cassie_interface" type="cassie_interface_node" args="" respawn="false" />
