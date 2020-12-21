@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
     contact_ekf ekf(nh, robot, true);
 
     // Whether to log data
-    VectorXf log = VectorXf::Zero(49);
+    VectorXf log = VectorXf::Zero(51);
     std::fstream logfile;
     bool log_estimation = false;
     ros::param::get("/cassie/log_estimation", log_estimation);
@@ -378,7 +378,7 @@ int main(int argc, char *argv[])
                 cassie_out.pelvis.radio.channel[SA] = 1.0;
                 cassie_out.pelvis.radio.channel[SB] = 0.;
                 cassie_out.pelvis.radio.channel[LS] = 1.0;
-                // cassie_out.pelvis.radio.channel[S1] = -0.80;
+                // cassie_out.pelvis.radio.channel[S1] = -0.68;
 
                 // Use real velocity from gazebo
                 Eigen::Quaterniond quat;
@@ -482,6 +482,10 @@ int main(int argc, char *argv[])
                 if ( !isSim )
                     tsec -= 1.6074545e9;
 
+                double voltage = 0.;
+                for (int i=0;i<12;i++)
+                    voltage += cassie_out.pelvis.battery.voltage[i];
+
                 // Use floats for logging size and speed
                 log << static_cast<float>(tsec), static_cast<float>(tnsec), // 2                                                                                                             // 1
                        static_cast<float>(proprioception_msg.orientation.w),
@@ -504,7 +508,9 @@ int main(int argc, char *argv[])
                        static_cast<float>(proprioception_msg.dq_achilles[0]),
                        static_cast<float>(proprioception_msg.dq_achilles[1]),   // 2
                        static_cast<float>(proprioception_msg.contact[0]),
-                       static_cast<float>(proprioception_msg.contact[1]);   
+                       static_cast<float>(proprioception_msg.contact[1]),
+                       static_cast<float>(cassie_out.pelvis.battery.current),
+                       static_cast<float>(voltage);
                 logfile.write(reinterpret_cast<char *>(log.data()), (log.size())*sizeof(float));
             }
         }
