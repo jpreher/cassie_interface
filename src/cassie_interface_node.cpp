@@ -482,9 +482,33 @@ int main(int argc, char *argv[])
                 if ( !isSim )
                     tsec -= 1.6074545e9;
 
+                // Get the mean voltage measured on the DC bus input to the motors
                 double voltage = 0.;
-                for (int i=0;i<12;i++)
-                    voltage += cassie_out.pelvis.battery.voltage[i];
+                voltage = (cassie_out.leftLeg.hipRollDrive.dcLinkVoltage
+                	+ cassie_out.leftLeg.hipYawDrive.dcLinkVoltage
+                	+ cassie_out.leftLeg.hipPitchDrive.dcLinkVoltage
+                	+ cassie_out.leftLeg.kneeDrive.dcLinkVoltage
+                	+ cassie_out.leftLeg.hipRollDrive.dcLinkVoltage
+                	+ cassie_out.rightLeg.footDrive.dcLinkVoltage
+                	+ cassie_out.rightLeg.hipYawDrive.dcLinkVoltage
+                	+ cassie_out.rightLeg.hipPitchDrive.dcLinkVoltage
+                	+ cassie_out.rightLeg.kneeDrive.dcLinkVoltage
+                	+ cassie_out.rightLeg.footDrive.dcLinkVoltage) / 10.;
+
+                // Convert torques to current
+                // current = torque / (gearRatio * motorConstant)
+                // gear ratio and motorConstant obtained from Agility Robotics
+                double motorCurrent = 0.;
+                motorCurrent = fabs(cassie_out.leftLeg.hipRollDrive.torque * 0.30769230769)
+                	+ fabs(cassie_out.leftLeg.hipYawDrive.torque * 0.30769230769)
+                	+ fabs(cassie_out.leftLeg.hipPitchDrive.torque * 0.23148148148)
+                	+ fabs(cassie_out.leftLeg.kneeDrive.torque * 0.23148148148)
+                	+ fabs(cassie_out.leftLeg.footDrive.torque * 0.35087719298)
+                	+ fabs(cassie_out.rightLeg.hipRollDrive.torque * 0.30769230769)
+                	+ fabs(cassie_out.rightLeg.hipYawDrive.torque * 0.30769230769)
+                	+ fabs(cassie_out.rightLeg.hipPitchDrive.torque * 0.23148148148)
+                	+ fabs(cassie_out.rightLeg.kneeDrive.torque * 0.23148148148)
+                	+ fabs(cassie_out.rightLeg.footDrive.torque * 0.35087719298);
 
                 // Use floats for logging size and speed
                 log << static_cast<float>(tsec), static_cast<float>(tnsec), // 2                                                                                                             // 1
@@ -509,7 +533,7 @@ int main(int argc, char *argv[])
                        static_cast<float>(proprioception_msg.dq_achilles[1]),   // 2
                        static_cast<float>(proprioception_msg.contact[0]),
                        static_cast<float>(proprioception_msg.contact[1]),
-                       static_cast<float>(cassie_out.pelvis.battery.current),
+                       static_cast<float>(motorCurrent),//cassie_out.pelvis.battery.current),
                        static_cast<float>(voltage);
                 logfile.write(reinterpret_cast<char *>(log.data()), (log.size())*sizeof(float));
             }
