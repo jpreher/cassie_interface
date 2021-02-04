@@ -105,9 +105,10 @@
                 use_qp: true
                 nDomain: 2
                 time_scale: 1.0
-                x_offset: 0.015
                 vx_offset: -0.05
                 vy_offset: 0.0
+                swing_foot_offset: -0.05
+                leg_angle_offset_center: 0
                 force_z_scale: 0.91
                 force_sp_scale: 1
                 left_stance_gravity_scale: 1
@@ -131,26 +132,21 @@
                     ddq_KdY: 3
                     ddq_KiY: 0
                 force_regulation:
-                    Kp_grf_z: 1800
-                    Kd_grf_z: 22
-                    Kd_grf_vx: 0
-                    Kd_grf_vy: 0
-                    Kd_grf_ffx: 0
-                    Kd_grf_ffy: 0
-                    Kp_grf_roll: 0
-                    Kd_grf_roll: 0
-                    Kp_grf_pitch: 0
-                    Kd_grf_pitch: 0
+                    Kp_grf_leglength: 1800
+                    Kd_grf_leglength: 22
+                    k_grf_offset: 0.01
+                    k1_grf: 0.025
+                    k2_grf: 0.04
+                    k3_grf: 0.0075
+                    k4_grf: 0
                 raibert:
-                    phaseThreshold: 0.50
+                    swing_angle_absolute: false
                     KpX: 0.045
                     KdX: 0.18
                     KiX: 0.06
-                    KvX: 0.0
                     KpY: 0.0375
                     KdY: 0.21
-                    KvY: 0.0
-                    KiY: 0.00
+                    KiY: 0.0
                 qp:
                     clf_use_Vdot_cost: true
                     clf_use_inequality: false

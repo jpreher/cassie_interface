@@ -107,21 +107,18 @@
             stepping:
                 use_qp: false
                 nDomain: 2
-                use_one_domain: true
                 time_scale: 1.0
                 vx_offset: 0.00
                 vy_offset: 0.00
+                swing_foot_offset: -0.05
+                leg_angle_offset_center: -0.03
+                force_z_scale: 1
+                force_sp_scale: 1
                 left_stance_gravity_scale: 1
                 right_stance_gravity_scale: 1
-                u_stancetoe_offset: 0
+                u_stancetoe_offset: -0.02
                 stoppable_velocity_threshold: 0.2
                 use_contact_switching: false
-                ddq_KpX: 2.10
-                ddq_KdX: 1.00
-                ddq_KiX: 1.35
-                ddq_KpY: 1.00
-                ddq_KdY: 0.60
-                ddq_KiY: 0.00
                 velocity_integrator_bleed_constant: 0.99999
                 kp: '[1600, 1000, 600, 600, 600, 600, 600, 600, 30]'
                 kd: '[25, 20, 10, 14, 14, 8, 8, 10, 2]'
@@ -130,43 +127,60 @@
                 vdx_lb: -0.4
                 vdy_ub: 0.3
                 vdy_lb: -0.3
+                acceleration_regulation:
+                    ddq_KpX: 2.10
+                    ddq_KdX: 1.00
+                    ddq_KiX: 1.35
+                    ddq_KpY: 1.00
+                    ddq_KdY: 0.60
+                    ddq_KiY: 0.00
+                force_regulation:
+                    Kp_grf_leglength: 0
+                    Kd_grf_leglength: 0
+                    k_grf_offset: 0
+                    k1_grf: 0
+                    k2_grf: 0
+                    k3_grf: 0
+                    k4_grf: 0
                 raibert:
-                    phaseThreshold: 0.50
+                    swing_angle_absolute: true
                     KpX: 0.045
                     KdX: 0.200
+                    KiX: 0
                     KpY: 0.086
                     KdY: 0.220
+                    KiY: 0.0
                 qp:
-                    clf_use_Vdot_cost: false
+                    clf_use_Vdot_cost: true
                     clf_use_inequality: false
-                    clf_use_task_pd: true
-                    clf_gam: 0.0148
-                    res_clf_ep: 1
-                    Pdiag: '[570.0877,467.8519,220.4069,575.4572,575.4572,669.8011,570.0877,236.8105,102.0083,11.4018,10.4615,8.0481,11.7465,11.7465,12.2288,11.4018,8.6471,6.4516]'
-                    Poffdiag: '[50,44.7214,27.3861,48.9898,48.9898,54.7723,50,27.3861,15.8114]'
-                    kp: '[2500, 2000, 1200, 2000, 2000, 1000, 2000, 1200, 1500]'
-                    kd: '[25, 20, 12, 20, 20, 10, 20, 12, 16]'
+                    clf_use_task_pd: false
+                    clf_gam: 0.0172
+                    res_clf_ep: 0.1
+                    Pdiag: '[6602.9826,5497.1921,4665.9713,5079.37,7030.2569,3151.909,3087.2439,2545.5844,3174.2917,29.5294,26.3158,30.1187,50.7937,45.3801,19.3014,17.8242,16.9706,20.49]'
+                    Poffdiag: '[268.3282,229.7825,232.379,300,309.8387,146.9694,138.5641,120,154.9193]'
+                    kp: '[3000, 2500, 2500, 2000, 2500, 1600, 2000, 2500, 1500]'
+                    kd: '[35, 30, 20, 25, 40, 14, 20, 20, 16]'
                     nQPIter: 50
                     reg_base_ddq: '[0.001, 0.001, 0.001, 0.001, 0.001, 0.001]'
-                    reg_stance_ddq: '[0.001, 0.001, 0.001 0.001, 0.001, 0.001, 0.001, 0.001]'
+                    reg_stance_ddq: '[0.001, 0.001, 0.001, 0.001, 0.6, 0.001, 0.6, 0.001]'
                     reg_swing_ddq: '[0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001]'
-                    reg_u: 0.0001
-                    reg_fx: 0.0002
-                    reg_fy: 0.0002
-                    reg_fz: 0.0002
-                    reg_muy: 0.0002
-                    reg_muz: 0.0002
-                    reg_rigid: 0.005
+                    reg_stance_u: '[0.01, 0.01, 0.01, 0.01, 0.01]'
+                    reg_swing_u: '[0.01, 0.01, 0.01, 0.01, 0.01]'
+                    reg_fx: 1
+                    reg_fy: 1
+                    reg_fz: 2
+                    reg_muy: 1
+                    reg_muz: 1
+                    reg_rigid: 1
                     reg_clf_delta: 1
-                    w_u_chatter: 0.001
-                    w_outputs: 0.2
-                    w_hol_fx: 1.5
-                    w_hol_fy: 1.5
-                    w_hol_fz: 1.5
-                    w_hol_my: 1.5
-                    w_hol_mz: 1.5
-                    w_hol_fixed: 0.05
-                    w_Vdot: 1.25
+                    w_outputs: 1.4
+                    w_hol_fx: 1
+                    w_hol_fy: 1
+                    w_hol_fz: 1
+                    w_hol_my: 1
+                    w_hol_mz: 1
+                    w_hol_fixed: 1
+                    w_Vdot: 1.4
 </rosparam>
 
 <node name="cassie_interface_node" pkg="cassie_interface" type="cassie_interface_node" args="" respawn="false" />

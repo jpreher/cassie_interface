@@ -378,7 +378,6 @@ int main(int argc, char *argv[])
                 cassie_out.pelvis.radio.channel[SA] = 1.0;
                 cassie_out.pelvis.radio.channel[SB] = 0.;
                 cassie_out.pelvis.radio.channel[LS] = 1.0;
-                // cassie_out.pelvis.radio.channel[S1] = -0.68;
 
                 // Use real velocity from gazebo
                 Eigen::Quaterniond quat;

@@ -107,10 +107,11 @@
             stepping:
                 use_qp: true
                 nDomain: 2
-                use_one_domain: true
                 time_scale: 1.0
                 vx_offset: 0.00
                 vy_offset: 0.00
+                swing_foot_offset: -0.05
+                leg_angle_offset_center: -0.03
                 force_z_scale: 1
                 force_sp_scale: 1
                 left_stance_gravity_scale: 1
@@ -122,7 +123,7 @@
                 kp: '[1600, 1000, 600, 600, 600, 600, 600, 600, 30]'
                 kd: '[25, 20, 10, 14, 14, 8, 8, 10, 2]'
                 gaitlib: 'package://cassie_controllers/gaits/20200927.yaml'
-                vdx_ub: 1.0
+                vdx_ub: 1
                 vdx_lb: -0.40
                 vdy_ub: 0.3
                 vdy_lb: -0.3
@@ -134,25 +135,20 @@
                     ddq_KdY: 3
                     ddq_KiY: 0
                 force_regulation:
-                    Kp_grf_z: 1400
-                    Kd_grf_z: 60
-                    Kd_grf_vx: 0
-                    Kd_grf_vy: 0
-                    Kd_grf_ffx: 0
-                    Kd_grf_ffy: 0
-                    Kp_grf_roll: 0
-                    Kd_grf_roll: 0
-                    Kp_grf_pitch: 0
-                    Kd_grf_pitch: 0
+                    Kp_grf_leglength: 1400
+                    Kd_grf_leglength: 60
+                    k_grf_offset: 0
+                    k1_grf: 0.01
+                    k2_grf: 0.10
+                    k3_grf: 0.005
+                    k4_grf: 0.08
                 raibert:
-                    phaseThreshold: 0.50
-                    KpX: 0.04
+                    swing_angle_absolute: false
+                    KpX: 0.09
                     KdX: 0.18
-                    KiX: 0.0
-                    KvX: 0.005
+                    KiX: 0.04
                     KpY: 0.085
                     KdY: 0.18
-                    KvY: 0.002
                     KiY: 0.0
                 qp:
                     clf_use_Vdot_cost: true
@@ -160,8 +156,8 @@
                     clf_use_task_pd: false
                     clf_gam: 0.0172
                     res_clf_ep: 0.1
-                    Pdiag: '[6278.1439,5403.0127,4003.4887,4202.262,6204.1987,3211.873,3320.5226,2841.7255,3174.2917,31.9667,24.6613,28.3089,23.0167,25.3285,20.7326,23.4796,25.9413,20.49]'
-                    Poffdiag: '[274.9545,219.089,212.132,164.3168,195.9592,154.9193,169.7056,164.3168,154.9193]'
+                    Pdiag: '[6602.9826,5497.1921,4665.9713,5079.37,7030.2569,3151.909,3087.2439,2545.5844,3174.2917,29.5294,26.3158,30.1187,50.7937,45.3801,19.3014,17.8242,16.9706,20.49]'
+                    Poffdiag: '[268.3282,229.7825,232.379,300,309.8387,146.9694,138.5641,120,154.9193]'
                     kp: '[3000, 2500, 2500, 2000, 2500, 1600, 2000, 2500, 1500]'
                     kd: '[35, 30, 20, 25, 40, 14, 20, 20, 16]'
                     nQPIter: 50
