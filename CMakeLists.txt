@@ -27,5 +27,5 @@ add_dependencies(cassieplugin ${catkin_EXPORTED_TARGETS})
 target_link_libraries(cassieplugin ${GAZEBO_LIBRARIES} ${catkin_LIBRARIES} ${PROJECT_SOURCE_DIR}/lib/libagilitycassie.a)
 
 # Build the core interface node
-add_executable(cassie_interface_node src/cassie_interface_node.cpp)
-target_link_libraries(cassie_interface_node ${catkin_LIBRARIES} cassieplugin)
+add_executable(cassie_interface_node src/cassie_interface_node.cpp src/udp.c)
+target_link_libraries(cassie_interface_node ${catkin_LIBRARIES} ${PROJECT_SOURCE_DIR}/lib/libagilitycassie.a)

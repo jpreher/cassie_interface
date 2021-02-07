@@ -143,7 +143,7 @@
                     k3_grf: 0.005
                     k4_grf: 0.08
                 raibert:
-                    swing_angle_absolute: true
+                    swing_angle_absolute: false
                     KpX: 0.09
                     KdX: 0.18
                     KiX: 0.04
